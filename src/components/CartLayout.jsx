@@ -31,7 +31,7 @@ export default function CartLayout({ item, setCart, setCost }) {
         </div>
       </div>
       <div className='relative flex-grow cart2:flex-grow-0 items-end flex flex-col justify-end'>
-        <FaRegTrashAlt onClick={handleDelete} size={20} color='red' className='cursor-pointer absolute -top-10 cart2:top-0 right-0 font-extrabold ' />
+        <FaRegTrashAlt onClick={handleDelete} size={20} color='red' className='cursor-pointer absolute -top-5 cart2:top-0 right-0 font-extrabold ' />
         <div className='rounded-full w-full select-none xsm:p-0 flex justify-center items-center gap-5 bg-gray-100'>
           <span onClick={() => handleQuantityChange(-1)} className='text-4xl -mt-1 px-3 py-1 flex-grow cursor-pointer text-center'>-</span>
           <span className='font-bold'>{item.Quantity}</span>

@@ -79,14 +79,16 @@ export default function Prodcut() {
         <IoIosArrowForward color='gray' />
         <Link to='/Shop' className='text-gray-400'>Shop</Link>
         <IoIosArrowForward color='gray' />
-       
+
 
       </div>
-      <div className='flex flex-wrap justify-center gap-x-10 mainMargin h-fit'>
-        <div className='bg-gray-100 flex-grow rounded-xl flex justify-center '>
+      <div className='flex flex-wrap justify-center gap-x-10 mainMargin  h-fit'>
+      <div className='bg-gray-100 flex-grow rounded-xl flex justify-center w-[80%] '>
           <Img className='w-[80%]' src={MyProdcut.src} alt=''
             img={MyProdcut.src?.split('/').pop().split('.')[0]} />
         </div>
+
+
         <div className='relative w-[100%-40px]'>
           <RateCost from='Prodcut' name={MyProdcut.name} stars={MyProdcut.stars} cost={MyProdcut.cost} discount={MyProdcut.discount} />
           <div>
@@ -142,42 +144,42 @@ export default function Prodcut() {
             <hr />
             <div className='absolute -translate-y-4 right-10 bg-white'>Choose Size</div>
             <div className='grid grid-cols-2 gap-4 mt-10 sm:flex sm:flex-wrap'>
-  <motion.div 
-    initial={{opacity:0,x:-75}}
-    animate={{opacity:1,x:0}}
-    transition={{delay:0}} 
-    onClick={handleSizeChanges('Small')} 
-    className={`${Size==='Small'?'bg-black text-white':'bg-gray-100'} cursor-pointer py-2 px-5 rounded-full w-full sm:w-auto text-xs md:text-sm`}>
-    Small
-  </motion.div>
-  
-  <motion.div 
-    initial={{opacity:0,x:-75}}
-    animate={{opacity:1,x:0}}
-    transition={{delay:0.1}} 
-    onClick={handleSizeChanges('Medium')} 
-    className={`${Size==='Medium'?'bg-black text-white':'bg-gray-100'} cursor-pointer py-2 px-5 rounded-full w-full sm:w-auto text-xs md:text-sm`}>
-    Medium
-  </motion.div>
-  
-  <motion.div 
-    initial={{opacity:0,x:-75}}
-    animate={{opacity:1,x:0}}
-    transition={{delay:0.2}} 
-    onClick={handleSizeChanges('Large')} 
-    className={`${Size==='Large'?'bg-black text-white':'bg-gray-100'} cursor-pointer py-2 px-5 rounded-full w-full sm:w-auto text-xs md:text-sm`}>
-    Large
-  </motion.div>
-  
-  <motion.div 
-    initial={{opacity:0,x:-75}}
-    animate={{opacity:1,x:0}}
-    transition={{delay:0.3}} 
-    onClick={handleSizeChanges('X-Large')} 
-    className={`${Size==='X-Large'?'bg-black text-white':'bg-gray-100'} cursor-pointer py-2 px-5 rounded-full w-full sm:w-auto text-xs md:text-sm`}>
-    X-Large
-  </motion.div>
-</div>
+              <motion.div
+                initial={{ opacity: 0, x: -75 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0 }}
+                onClick={handleSizeChanges('Small')}
+                className={`${Size === 'Small' ? 'bg-black text-white' : 'bg-gray-100'} cursor-pointer py-2 px-5 rounded-full w-full sm:w-auto text-xs md:text-sm`}>
+                Small
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: -75 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.1 }}
+                onClick={handleSizeChanges('Medium')}
+                className={`${Size === 'Medium' ? 'bg-black text-white' : 'bg-gray-100'} cursor-pointer py-2 px-5 rounded-full w-full sm:w-auto text-xs md:text-sm`}>
+                Medium
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: -75 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+                onClick={handleSizeChanges('Large')}
+                className={`${Size === 'Large' ? 'bg-black text-white' : 'bg-gray-100'} cursor-pointer py-2 px-5 rounded-full w-full sm:w-auto text-xs md:text-sm`}>
+                Large
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: -75 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 }}
+                onClick={handleSizeChanges('X-Large')}
+                className={`${Size === 'X-Large' ? 'bg-black text-white' : 'bg-gray-100'} cursor-pointer py-2 px-5 rounded-full w-full sm:w-auto text-xs md:text-sm`}>
+                X-Large
+              </motion.div>
+            </div>
 
 
 
@@ -200,7 +202,7 @@ export default function Prodcut() {
                 transition={{ delay: 0.3 }}
                 className='flex-grow'
               >
-                <button onClick={handleSubmit} className='bg-black w-full text-white px-5 py-4 rounded-full flex-grow'>Add to Cart</button>
+                <button onClick={handleSubmit} className='bg-black w-full text-white px-5 py-4 rounded-full flex-grow hover:bg-gray-600 '>Add to Cart</button>
               </motion.div>
             </div>
           </div>

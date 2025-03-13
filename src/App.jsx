@@ -4,6 +4,8 @@ import Error from "./pages/Error"
 import Root from "./pages/Root"
 import Shop from "./pages/Shop"
 import Cart from "./pages/Cart"
+import SignUp from "./pages/SignUp"
+import Login from "./pages/Login"
 import Prodcut from "./pages/Prodcut"
 import { motion } from "framer-motion"
 
@@ -14,6 +16,8 @@ const router = createBrowserRouter([
     errorElement:<Error/>,
     children: [
       {path: "", element: <Home/>},
+      {path: "SignUp", element: <SignUp/>},
+      {path: "Login", element: <Login/>},
       {path: "Shop", element: <Shop/>},
       {path: "Cart", element: <Cart/>},
       {path: "Shop/:name", element: <Prodcut/>},

@@ -37,7 +37,7 @@ export default function ImgSlider({ type, del = 'no', id }) {
   }
 
   return (
-    <div className="overflow-hidden mt-10" ref={ref}>
+    <div className="overflow-hidden mt-10 px-4 sm:px-6 md:px-8 " ref={ref}>
   <motion.div
     drag="x"
     dragConstraints={{ left: -Width, right: 0 }}
@@ -45,7 +45,7 @@ export default function ImgSlider({ type, del = 'no', id }) {
     ref={mainDiv}
     className="w-fit cursor-pointer">
     <div
-      className="grid gap-5 grid-cols-2 sm:grid-cols-2 md:flex"
+      className="grid gap-5 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"  // تعديل عدد الأعمدة حسب حجم الشاشة
     >
       {
         ProductsByType.map((el, index) => {
@@ -59,7 +59,7 @@ export default function ImgSlider({ type, del = 'no', id }) {
                 transition={{ delay: index * 0.1, type: 'just' }}
                 initial="hidden"
                 animate={MainControls}
-              className="flex flex-col w-[140px] h-[200px] sm:w-[150px] sm:h-[200px] md:w-[200px] md:h-[250px] lg:w-[250px] lg:h-[300px]"
+                className="flex flex-col w-[160px] h-[220px] sm:w-[170px] sm:h-[230px] md:w-[200px] md:h-[250px] lg:w-[250px] lg:h-[300px]"
               >
                 <motion.div
                   whileHover={{ scale: 1.2, rotate: index & 1 ? 10 : -10 }}
@@ -75,7 +75,7 @@ export default function ImgSlider({ type, del = 'no', id }) {
                                 : el.src.split("/").pop().split(".")[0]
                     }
                     whileHover={{ scale: 1.2, rotate: index & 1 ? 10 : -10 }}
-                    className="w-full h-[150px] sm:h-[200px]" draggable="false" src={el.src} alt={el.src} />
+                    className="w-full h-[170px] sm:h-[220px]" draggable="false" src={el.src} alt={el.src} />
                 </motion.div>
                 <RateCost name={el.name} stars={el.stars} cost={el.cost} discount={el.discount} />
               </motion.div>
@@ -86,6 +86,9 @@ export default function ImgSlider({ type, del = 'no', id }) {
     </div>
   </motion.div>
 </div>
+
+  
+
 
 
   )

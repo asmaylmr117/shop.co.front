@@ -37,6 +37,8 @@ export default function SideNav() {
             <li><Link className="Links" to='/NewArrival'>New Arrivals</Link></li>
             <li><Link className="Links" to='/TopSelling'>Top Selling</Link></li>
             <li><Link className="Links" to='/OnSale'>On Sale</Link></li>
+           <li><Link to='/Login' className="Links">Login</Link></li>
+           <li> <Link to='/SignUp' className="Links">Sign Up</Link></li>
           <form className="flex gap-2" onSubmit={handleFormSubmit}>
             <button type="submit">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">

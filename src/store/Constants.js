@@ -4,14 +4,19 @@ export const Products = [
   {src: '../3.png', type:'newarrival', name: 'Checkered Shirt', stars: 4.5, cost: 180, discount: 0},
   {src: '../4.png', type:'newarrival', name: 'Sleeve Striped T-shirt', stars: 4.5, cost: 130, discount: 30},
   {src: '../5.png', type:'newarrival', name: 'Vertical Striped Shirt', stars: 5, cost: 212, discount: 20},
+  {src: '../6.png', type:'newarrival', name: 'Courage Graphic T-shirt', stars: 4, cost: 145, discount: 0},
+  {src: '../15.png', type:'newarrival', name: 'Relaxed Fit Twill Utility Shorts', stars: 5, cost: 260, discount: 10},
+  {src: '../8.png', type:'newarrival', name: 'Faded Skinny Jeans', stars: 4.5, cost: 210, discount: 0},
+
 
   {src: '../5.png', type:'topselling', name: 'Vertical Striped Shirt', stars: 5, cost: 212, discount: 20},
   {src: '../3.png', type:'topselling', name: 'Checkered Shirt', stars: 4.5, cost: 180, discount: 0},
   {src: '../6.png', type:'topselling', name: 'Courage Graphic T-shirt', stars: 4, cost: 145, discount: 0},
   {src: '../7.png', type:'topselling', name: 'Loose Fit Bermuda Shorts', stars: 4.5, cost: 240, discount: 20},
   {src: '../15.png', type:'topselling', name: 'Relaxed Fit Twill Utility Shorts', stars: 5, cost: 260, discount: 10},
-
   {src: '../8.png', type:'topselling', name: 'Faded Skinny Jeans', stars: 4.5, cost: 210, discount: 0},
+  {src: '../1.png', type:'topselling', name: 'T-shirt with Tape Details', stars: 4.5, cost: 120, discount: 0},
+  {src: '../2.png', type:'topselling', name: 'Skinny Fit Jeans', stars: 3.5, cost: 240, discount: 20},
 
   
   {src: '../9.png', type:'onsale', name: 'One Life Graphic T-shirt', stars: 4.5, cost: 260, discount: 40},

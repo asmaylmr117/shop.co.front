@@ -49,10 +49,17 @@ export default function Cart() {
             <h1 className="font-bold text-4xl sm:text-5xl">Thank You for Your Purchase!</h1>
           </Reavel>
           <Reavel>
-            <p className="text-lg sm:text-xl">You must add items to the cart before proceeding to checkout.</p>
-          </Reavel>
+  <p className="text-lg sm:text-xl">
+    <span className="block sm:inline">You must add items to </span>
+   
+    <span className="block sm:inline">Cart before proceeding to</span>
+   
+    <span className="block sm:inline">Check out.</span>
+  </p>
+</Reavel>
 
-          <Link className="btn w-full h-12 sm:h-10 py-4 max-w-xs sm:max-w-md mx-auto text-center text-lg sm:text-base bg-blue-500 text-white rounded-md hover:bg-blue-600 transition" to='/Shop'>
+
+          <Link  className="btn w-full sm:w-auto md:w-fit text-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-gray-600 transition-all whitespace-nowrap" to='/Shop'>
             Go to Shop
           </Link>
 
@@ -78,7 +85,7 @@ export default function Cart() {
           <Reavel><p>Must add items on the card before you proceed to checkout</p></Reavel>
           <Reavel className="p-4 flex justify-center">
             <Link
-              className="btn w-full sm:w-auto md:w-fit text-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all whitespace-nowrap"
+              className="btn w-full sm:w-auto md:w-fit text-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-gray-600 transition-all whitespace-nowrap"
               to='/Shop'>
               Go to Shop
             </Link>
@@ -164,7 +171,7 @@ export default function Cart() {
               {CorrectDiscount === true && <p className="font-bold mt-5 text-center text-green-600">Promo code applied successfully</p>}
             </div>
             <div className="flex mt-5 mb-5">
-              <Link className="btn flex-grow text-center" onClick={() => {
+              <Link className="btn flex-grow text-center hover:bg-gray-600 " onClick={() => {
                 AddToCart([], setCart, setCost, 0, 'empty')
                 setCheckout(true)
               }}>Go to Checkout</Link>
