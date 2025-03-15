@@ -1,6 +1,6 @@
-// Login.jsx
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../AuthContext';
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -9,6 +9,7 @@ export default function Login() {
   });
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -17,7 +18,7 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('https://shop-co-back.vercel.app/api/auth/login', {
+      const response = await fetch('http://localhost:3000/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -30,14 +31,12 @@ export default function Login() {
       }
 
       const data = await response.json();
-      // Store token or user data as needed
-      localStorage.setItem('token', data.token);
-      navigate('/'); // Redirect to home page
+      login(data.token, formData.email); // استخدام دالة login من Context
+      navigate('/');
     } catch (err) {
       setError('Invalid credentials. Please try again.');
     }
   };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
