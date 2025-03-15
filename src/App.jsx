@@ -8,7 +8,7 @@ import SignUp from "./pages/SignUp"
 import Login from "./pages/Login"
 import Prodcut from "./pages/Prodcut"
 import { motion } from "framer-motion"
-
+import { AuthProvider } from './AuthContext';
 const router = createBrowserRouter([
   {
     path: "/", 
@@ -32,9 +32,11 @@ const router = createBrowserRouter([
 
 function App() {
   return (
+    <AuthProvider>
     <div>
       <RouterProvider router={router}/>
     </div>
+    </AuthProvider>
   )
 }
 
