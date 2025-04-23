@@ -12,8 +12,8 @@
 - **HTML5**
 - **CSS3**
 - **Tailwind CSS**
-- **JavaScript **
-- **React.js **
+- **JavaScript**
+- **React.js**
 - **Redux**
 - **Redux Toolkit**
 
