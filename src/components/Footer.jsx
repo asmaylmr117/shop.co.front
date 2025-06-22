@@ -113,7 +113,7 @@ export default function Footer() {
 
         <div className="flex justify-center mt-10 gap-y-5 border-t-4 items-center flex-wrap">
           <div className="flex-grow text-center md:text-left">
-            <a className="text-blue-800 ml-5" href="#">Developed by DevnityCode Copyright © 2024 </a>
+            <a className="text-blue-800 ml-5" href="#">Developed by DevnityCode Copyright © 2025 </a>
           </div>
           <div className="w-fit">
             <PaymentsLogos />
