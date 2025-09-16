@@ -1,36 +1,39 @@
-import { useEffect, useState, useRef } from 'react'
-import { motion } from 'framer-motion'
-import Reavel from '../Reavel'
-import { FaStar, FaArrowLeft, FaArrowRight, FaSpinner, FaPlus } from "react-icons/fa"
-import { MdVerified, MdError } from "react-icons/md"
+import { useEffect, useState, useRef, useContext } from 'react';
+import { motion } from 'framer-motion';
+import Reavel from '../Reavel';
+import { FaStar, FaArrowLeft, FaArrowRight, FaSpinner, FaPlus, FaEdit, FaTrash } from "react-icons/fa";
+import { MdVerified, MdError } from "react-icons/md";
+import { AuthContext } from '../AuthContext';
 
-const API_BASE_URL = 'https://shopbackco.vercel.app/api'
+const API_BASE_URL = 'https://shopbackco.vercel.app/api';
 
 export default function HappyCustomers() {
-  // Initialize with empty array to avoid iteration errors
-  const [reviews, setReviews] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [width, setWidth] = useState(0)
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [showAddForm, setShowAddForm] = useState(false)
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [width, setWidth] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [editingReview, setEditingReview] = useState(null);
   const [newReview, setNewReview] = useState({
     name: '',
     review: '',
     rating: 5
-  })
-  const [submitting, setSubmitting] = useState(false)
+  });
+  const [submitting, setSubmitting] = useState(false);
 
-  const ref = useRef()
+  const { isLoggedIn, userRole, getAuthHeaders } = useContext(AuthContext);
 
-  // Fetch reviews from API - Method 2: Using async/await with better error handling
+  const ref = useRef();
+
+  // Fetch reviews from API
   const fetchReviews = async () => {
-    setLoading(true)
-    setError(null)
+    setLoading(true);
+    setError(null);
 
     try {
-      const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
 
       const response = await fetch(`${API_BASE_URL}/reviews/`, {
         signal: controller.signal,
@@ -38,161 +41,270 @@ export default function HappyCustomers() {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         }
-      })
+      });
 
-      clearTimeout(timeoutId)
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
-        throw new Error(`Server error: ${response.status} ${response.statusText}`)
+        throw new Error(`Server error: ${response.status} ${response.statusText}`);
       }
 
-      const data = await response.json()
-      console.log('API Response:', data) // Debug log
+      const data = await response.json();
+      console.log('API Response:', data);
 
-      // Multiple safety checks for different API response formats
-      let reviewsArray = []
-
+      let reviewsArray = [];
       if (Array.isArray(data)) {
-        reviewsArray = data
+        reviewsArray = data;
       } else if (data && Array.isArray(data.reviews)) {
-        reviewsArray = data.reviews
+        reviewsArray = data.reviews;
       } else if (data && Array.isArray(data.data)) {
-        reviewsArray = data.data
+        reviewsArray = data.data;
       } else if (data && typeof data === 'object' && data.results && Array.isArray(data.results)) {
-        reviewsArray = data.results
+        reviewsArray = data.results;
       } else {
-        console.warn('Unexpected API response format:', data)
-        reviewsArray = []
+        console.warn('Unexpected API response format:', data);
+        reviewsArray = [];
       }
 
-      // Update state with the processed array
-      setReviews(reviewsArray)
+      setReviews(reviewsArray);
 
-      // Reset current index if it's out of bounds
       if (reviewsArray.length > 0 && currentIndex >= reviewsArray.length) {
-        setCurrentIndex(0)
+        setCurrentIndex(0);
       }
 
     } catch (err) {
-      console.error('Fetch error:', err)
+      console.error('Fetch error:', err);
 
       if (err.name === 'AbortError') {
-        setError('Request timeout. Please check your connection.')
+        setError('Request timeout. Please check your connection.');
       } else if (err.message.includes('Failed to fetch')) {
-        setError('Network error. Please check your internet connection.')
+        setError('Network error. Please check your internet connection.');
       } else {
-        setError(`Failed to load reviews: ${err.message}`)
+        setError(`Failed to load reviews: ${err.message}`);
       }
 
-      // Always ensure reviews is an array
-      setReviews([])
+      setReviews([]);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
+  };
+
+  // Add new review
+const addReview = async (reviewData) => {
+  setSubmitting(true);
+
+  try {
+    if (!isLoggedIn) {
+      alert('You must be logged in to add reviews.');
+      return;
+    }
+
+    const response = await fetch(`${API_BASE_URL}/reviews/`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        ...getAuthHeaders('application/json')
+      },
+      body: JSON.stringify(reviewData)
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to submit review: ${response.status} - ${errorText}`);
+    }
+
+    const newReviewData = await response.json();
+    console.log('New review added:', newReviewData);
+
+    const currentReviews = Array.isArray(reviews) ? reviews : [];
+    const updatedReviews = [...currentReviews, newReviewData];
+    setReviews(updatedReviews);
+
+    setNewReview({ name: '', review: '', rating: 5 });
+    setShowAddForm(false);
+
+    alert('Review added successfully!');
+  } catch (err) {
+    console.error('Add review error:', err);
+    alert(`Error adding review: ${err.message}`);
+  } finally {
+    setSubmitting(false);
+  }
+};
+
+  // Update existing review 
+const updateReview = async (reviewId, reviewData) => {
+  setSubmitting(true);
+
+  try {
+    if (!isLoggedIn) {
+      alert('You must be logged in to update reviews.');
+      return;
+    }
+
+    const response = await fetch(`${API_BASE_URL}/reviews/${reviewId}`, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        ...getAuthHeaders('application/json')
+      },
+      body: JSON.stringify(reviewData)
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to update review: ${response.status} - ${errorText}`);
+    }
+
+    const updatedReviewData = await response.json();
+    console.log('Review updated:', updatedReviewData);
+
+    const updatedReviews = reviews.map(review =>
+      review.id === reviewId ? updatedReviewData : review
+    );
+    setReviews(updatedReviews);
+
+    setEditingReview(null);
+    setNewReview({ name: '', review: '', rating: 5 });
+
+    alert('Review updated successfully!');
+  } catch (err) {
+    console.error('Update review error:', err);
+    alert(`Error updating review: ${err.message}`);
+  } finally {
+    setSubmitting(false);
+  }
+};
+
+// Delete a review
+  const deleteReview = async (reviewId) => {
+  if (!window.confirm('Are you sure you want to delete this review?')) return;
+
+  if (!isLoggedIn) {
+    alert('You must be logged in to delete reviews.');
+    return;
   }
 
-  // Add new review - Method 2: More robust error handling
-  const addReview = async (reviewData) => {
-    setSubmitting(true)
-
-    try {
-      const response = await fetch(`${API_BASE_URL}/reviews/`, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(reviewData)
-      })
-
-      if (!response.ok) {
-        const errorText = await response.text()
-        throw new Error(`Failed to submit review: ${response.status} - ${errorText}`)
+  try {
+    const response = await fetch(`${API_BASE_URL}/reviews/${reviewId}`, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        ...getAuthHeaders('application/json')
       }
+    });
 
-      const newReviewData = await response.json()
-      console.log('New review added:', newReviewData)
-
-      // Instead of using spread operator with prev, create new array directly
-      const currentReviews = Array.isArray(reviews) ? reviews : []
-      const updatedReviews = [...currentReviews, newReviewData]
-      setReviews(updatedReviews)
-
-      // Reset form and close it
-      setNewReview({ name: '', review: '', rating: 5 })
-      setShowAddForm(false)
-
-      alert('Review added successfully!')
-
-    } catch (err) {
-      console.error('Add review error:', err)
-      alert(`Error adding review: ${err.message}`)
-    } finally {
-      setSubmitting(false)
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to delete review: ${response.status} - ${errorText}`);
     }
-  }
 
-  // Handle form submission
+    const updatedReviews = reviews.filter(review => review.id !== reviewId);
+    setReviews(updatedReviews);
+
+    alert('Review deleted successfully!');
+  } catch (err) {
+    console.error('Delete review error:', err);
+    alert(`Error deleting review: ${err.message}`);
+  }
+};
+
+  // Handle form submission for both add and edit
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    // Validation
-    const name = newReview.name.trim()
-    const reviewText = newReview.review.trim()
+    const name = newReview.name.trim();
+    const reviewText = newReview.review.trim();
 
     if (!name || !reviewText) {
-      alert('Please fill in all required fields')
-      return
+      alert('Please fill in all required fields');
+      return;
     }
 
     if (name.length < 2) {
-      alert('Name must be at least 2 characters long')
-      return
+      alert('Name must be at least 2 characters long');
+      return;
     }
 
     if (reviewText.length < 10) {
-      alert('Review must be at least 10 characters long')
-      return
+      alert('Review must be at least 10 characters long');
+      return;
     }
 
-    addReview({
-      name: name,
-      review: reviewText,
-      rating: parseInt(newReview.rating)
-    })
+    if (editingReview) {
+      updateReview(editingReview.id, {
+        name: name,
+        review: reviewText,
+        rating: parseInt(newReview.rating)
+      });
+    } else {
+      addReview({
+        name: name,
+        review: reviewText,
+        rating: parseInt(newReview.rating)
+      });
+    }
+  };
+
+  // Start editing a review
+  const startEditing = (review) => {
+  if (!isLoggedIn) {
+    alert('Please log in to edit reviews');
+    return;
   }
+
+  setEditingReview(review);
+  setNewReview({
+    name: review.name || '',
+    review: review.review || '',
+    rating: review.rating || 5
+  });
+  setShowAddForm(true);
+};
+
+  // Cancel editing
+  const cancelEditing = () => {
+    setEditingReview(null);
+    setNewReview({ name: '', review: '', rating: 5 });
+    setShowAddForm(false);
+  };
+
+  // Check if current user can edit/delete a review (غير مستخدمة الآن)
+  const canModifyReview = (review) => {
+    return user?.role === 'admin' || user?.id === review.userId;
+  };
 
   // Update width for dragging
   useEffect(() => {
     if (ref.current && Array.isArray(reviews) && reviews.length > 0) {
-      const newWidth = ref.current.scrollWidth - ref.current.offsetWidth
-      setWidth(Math.max(0, newWidth))
+      const newWidth = ref.current.scrollWidth - ref.current.offsetWidth;
+      setWidth(Math.max(0, newWidth));
     }
-  }, [reviews])
+  }, [reviews]);
 
   // Fetch reviews on mount
   useEffect(() => {
-    fetchReviews()
-  }, [])
+    fetchReviews();
+  }, []);
 
-  // Safe navigation functions
+  // Navigation functions
   const nextCustomer = () => {
-    const reviewsLength = Array.isArray(reviews) ? reviews.length : 0
+    const reviewsLength = Array.isArray(reviews) ? reviews.length : 0;
     if (reviewsLength > 0 && currentIndex < reviewsLength - 1) {
-      setCurrentIndex(prev => prev + 1)
+      setCurrentIndex(prev => prev + 1);
     }
-  }
+  };
 
   const prevCustomer = () => {
     if (currentIndex > 0) {
-      setCurrentIndex(prev => prev - 1)
+      setCurrentIndex(prev => prev - 1);
     }
-  }
+  };
 
   // Render stars component
   const StarRating = ({ rating }) => {
-    const stars = []
-    const numRating = typeof rating === 'number' ? rating : 5
+    const stars = [];
+    const numRating = typeof rating === 'number' ? rating : 5;
 
     for (let i = 1; i <= 5; i++) {
       stars.push(
@@ -200,15 +312,15 @@ export default function HappyCustomers() {
           key={i}
           className={i <= numRating ? 'text-yellow-400' : 'text-gray-300'}
         />
-      )
+      );
     }
-    return <div className='flex gap-1'>{stars}</div>
-  }
+    return <div className='flex gap-1'>{stars}</div>;
+  };
 
   // Get safe reviews array
-  const safeReviews = Array.isArray(reviews) ? reviews : []
-  const reviewsCount = safeReviews.length
-  const hasReviews = reviewsCount > 0
+  const safeReviews = Array.isArray(reviews) ? reviews : [];
+  const reviewsCount = safeReviews.length;
+  const hasReviews = reviewsCount > 0;
 
   // Loading component
   const LoadingComponent = () => (
@@ -218,7 +330,7 @@ export default function HappyCustomers() {
         <span className='text-xl text-gray-600'>Loading reviews...</span>
       </div>
     </div>
-  )
+  );
 
   // Error component
   const ErrorComponent = () => (
@@ -235,10 +347,10 @@ export default function HappyCustomers() {
         </button>
       </div>
     </div>
-  )
+  );
 
-  if (loading) return <LoadingComponent />
-  if (error && !hasReviews) return <ErrorComponent />
+  if (loading) return <LoadingComponent />;
+  if (error && !hasReviews) return <ErrorComponent />;
 
   return (
     <div className='mainMargin pb-10 pt-20'>
@@ -248,18 +360,28 @@ export default function HappyCustomers() {
         <span className="block xsm:inline">CUSTOMERS</span>
       </h1>
 
-      {/* Add Review Button */}
-      <div className="flex justify-center mt-8">
-        <button
-          onClick={() => setShowAddForm(!showAddForm)}
-          className='bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg flex items-center gap-2 transition-colors'
-        >
-          <FaPlus className={`transition-transform ${showAddForm ? 'rotate-45' : ''}`} />
-          {showAddForm ? 'Cancel' : 'Add Review'}
-        </button>
-      </div>
+      {/* Add/Edit Review Button */}
+      {isLoggedIn && (
+        <div className="flex justify-center mt-8">
+          <button
+            onClick={() => {
+              if (showAddForm && editingReview) {
+                cancelEditing();
+              } else {
+                setShowAddForm(!showAddForm);
+                setEditingReview(null);
+                setNewReview({ name: '', review: '', rating: 5 });
+              }
+            }}
+            className='bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg flex items-center gap-2 transition-colors'
+          >
+            <FaPlus className={`transition-transform ${showAddForm && !editingReview ? 'rotate-45' : ''}`} />
+            {showAddForm && !editingReview ? 'Cancel' : editingReview ? 'Cancel Edit' : 'Add Review'}
+          </button>
+        </div>
+      )}
 
-      {/* Add Review Form */}
+      {/* Add/Edit Review Form */}
       {showAddForm && (
         <motion.div
           initial={{ opacity: 0, y: -30 }}
@@ -267,7 +389,9 @@ export default function HappyCustomers() {
           exit={{ opacity: 0, y: -30 }}
           className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-lg border"
         >
-          <h3 className='text-xl font-bold mb-6 text-center text-gray-800'>Add New Review</h3>
+          <h3 className='text-xl font-bold mb-6 text-center text-gray-800'>
+            {editingReview ? 'Edit Review' : 'Add New Review'}
+          </h3>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label className="block text-sm font-semibold mb-2 text-gray-700">Name *</label>
@@ -318,11 +442,11 @@ export default function HappyCustomers() {
                 disabled={submitting}
                 className="flex-1 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white font-bold py-2 px-4 rounded-lg transition-colors"
               >
-                {submitting ? 'Submitting...' : 'Submit Review'}
+                {submitting ? 'Submitting...' : (editingReview ? 'Update Review' : 'Submit Review')}
               </button>
               <button
                 type="button"
-                onClick={() => setShowAddForm(false)}
+                onClick={cancelEditing}
                 className="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors"
               >
                 Cancel
@@ -389,9 +513,27 @@ export default function HappyCustomers() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 key={review.id || `review-${index}`}
-                className={`flex flex-col gap-4 w-[350px] h-[250px] ${index === currentIndex ? 'block' : 'hidden'
-                  } sm:block bg-white p-6 rounded-xl shadow-lg border hover:shadow-xl transition-all duration-300 overflow-y-auto`}
+                className={`flex flex-col gap-4 w-[350px] min-h-[200px] ${index === currentIndex ? 'block' : 'hidden'
+                  } sm:block bg-white p-6 rounded-xl shadow-lg border hover:shadow-xl transition-all duration-300 relative`}
               >
+                {/* Edit and Delete buttons - بدون شروط */}
+                <div className="absolute top-4 right-4 flex gap-2">
+                  <button
+                    onClick={() => startEditing(review)}
+                    className="p-2 bg-blue-100 text-blue-600 rounded-full hover:bg-blue-200 transition-colors"
+                    title="Edit review"
+                  >
+                    <FaEdit size={14} />
+                  </button>
+                  <button
+                    onClick={() => deleteReview(review.id)}
+                    className="p-2 bg-red-100 text-red-600 rounded-full hover:bg-red-200 transition-colors"
+                    title="Delete review"
+                  >
+                    <FaTrash size={14} />
+                  </button>
+                </div>
+
                 <Reavel>
                   <StarRating rating={review.rating} />
                 </Reavel>
@@ -445,5 +587,5 @@ export default function HappyCustomers() {
         </button>
       </div>
     </div>
-  )
+  );
 }

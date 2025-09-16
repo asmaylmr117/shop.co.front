@@ -5,17 +5,14 @@ import TopHeader from '../components/TopHeader'
 import SideNav from '../components/SideNav'
 import LayoutHolder from '../components/LayoutHolder'
 
-
 export default function Root() {
   return (
-    <div className='bg-whgite'>
+    <div className='bg-white'>
       <SideNavContext>
         <CartContext>
           <TopHeader/>
           <Navbar/>
-
           <LayoutHolder type='Outlet'/>
-
           <SideNav/>
         </CartContext>
       </SideNavContext>

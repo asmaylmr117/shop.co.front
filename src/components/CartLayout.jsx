@@ -1,43 +1,122 @@
-import React, { useState } from 'react'
-import { FaRegTrashAlt } from "react-icons/fa";
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState } from 'react';
+import { FiMinus, FiPlus, FiTrash2 } from 'react-icons/fi';
 import AddToCart from '../store/AddToCart';
-import Img from './Img';
 
-export default function CartLayout({ item, setCart, setCost }) {
-  const [ShowName, setShowName] = useState(false)
-  const handleQuantityChange = (num) => {
-    AddToCart(item, setCart, setCost, num)
-  }
-  const handleDelete = () => {
-    AddToCart(item, setCart, setCost, -item.Quantity)
-  }
+export default function CartLayout({ item, updateCart, setCost }) {
+  const [quantity, setQuantity] = useState(item.Quantity || 1);
+
+  const handleQuantityChange = (newQuantity) => {
+    if (newQuantity <= 0) {
+      handleRemoveItem();
+      return;
+    }
+
+    // تحديث localStorage
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const itemIndex = cart.findIndex(cartItem => 
+      cartItem.id === item.id && 
+      (cartItem.color || '') === (item.color || '') && 
+      (cartItem.size || '') === (item.size || '')
+    );
+
+    if (itemIndex !== -1) {
+      cart[itemIndex].Quantity = newQuantity;
+      localStorage.setItem('cart', JSON.stringify(cart));
+      
+      // حساب التكلفة الجديدة
+      const newCost = cart.reduce((total, cartItem) => {
+        return total + (parseFloat(cartItem.cost) || 0) * (parseInt(cartItem.Quantity) || 1);
+      }, 0);
+      
+      setCost(newCost);
+      setQuantity(newQuantity);
+      updateCart(); // تحديث السياق
+    }
+  };
+
+  const handleRemoveItem = () => {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const updatedCart = cart.filter(cartItem => 
+      !(cartItem.id === item.id && 
+        (cartItem.color || '') === (item.color || '') && 
+        (cartItem.size || '') === (item.size || ''))
+    );
+    
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
+    
+    // حساب التكلفة الجديدة
+    const newCost = updatedCart.reduce((total, cartItem) => {
+      return total + (parseFloat(cartItem.cost) || 0) * (parseInt(cartItem.Quantity) || 1);
+    }, 0);
+    
+    setCost(newCost);
+    updateCart(); // تحديث السياق
+  };
+
+  const itemTotal = (parseFloat(item.cost) || 0) * quantity;
+
   return (
-    <div className=' gap-y-10 flex-wrap flex justify-between'>
-      <div className='flex flex-wrap gap-3'>
-        <div className='bg-gray-100 cart:block flex justify-center items-center cart:flex-shrink-0 flex-grow h-fit'><Img className='cart:w-32 cart:h-32' src={item.src} img={item.src?.split('/').pop().split('.')[0]} alt="" from='cart' /></div>
-        <div className='flex flex-col justify-between'>
-          <div className='flex flex-col'>
-            <h1 className='font-bold text-2xl overflow-hidden w-[190px]' style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} onClick={() => setShowName(pre => !pre)} title={item.name}>{item.name}</h1>
-            <AnimatePresence>{ShowName && <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: -30 }}
-              exit={{ opacity: 0, y: -10 }}
-              className='absolute text-xs bg-black text-white p-2'>{item.name}</motion.div>}</AnimatePresence>
-            <p>Size: {item.size}</p>
-            <p>Color: {item.color}</p>
-          </div>
-          <div className='font-bold text-2xl'>${item.cost}</div>
-        </div>
-      </div>
-      <div className='relative flex-grow cart2:flex-grow-0 items-end flex flex-col justify-end'>
-        <FaRegTrashAlt onClick={handleDelete} size={20} color='red' className='cursor-pointer absolute -top-5 cart2:top-0 right-0 font-extrabold ' />
-        <div className='rounded-full w-full select-none xsm:p-0 flex justify-center items-center gap-5 bg-gray-100'>
-          <span onClick={() => handleQuantityChange(-1)} className='text-4xl -mt-1 px-3 py-1 flex-grow cursor-pointer text-center'>-</span>
-          <span className='font-bold'>{item.Quantity}</span>
-          <span onClick={() => handleQuantityChange(1)} className='text-4xl -mt-1 px-3 py-1 flex-grow cursor-pointer text-center'>+</span>
-        </div>
-      </div>
+    <div className="flex items-center gap-4 p-4 bg-white rounded-lg">
+      {/* صورة المنتج */}
+      <div className="w-20 h-20 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">
+  {item.image_data ? (
+    <img
+      src={`data:image/jpeg;base64,${item.image_data}`}
+      alt={item.name}
+      className="w-full h-full object-cover"
+    />
+  ) : item.image_url ? (
+    <img
+      src={item.image_url}
+      alt={item.name}
+      className="w-full h-full object-cover"
+    />
+  ) : (
+    <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">
+      No Image
     </div>
-  )
+  )}
+</div>
+
+      {/* تفاصيل المنتج */}
+      <div className="flex-grow">
+        <h3 className="font-semibold text-gray-900">{item.name || 'Unknown Product'}</h3>
+        
+        {item.color && (
+          <p className="text-xs text-gray-500">Color: {item.color}</p>
+        )}
+        {item.size && (
+          <p className="text-xs text-gray-500">Size: {item.size}</p>
+        )}
+      </div>
+
+      {/* التحكم في الكمية */}
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() => handleQuantityChange(quantity - 1)}
+          className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors"
+        >
+          <FiMinus size={14} />
+        </button>
+        
+        <span className="w-8 text-center font-medium">{quantity}</span>
+        
+        <button
+          onClick={() => handleQuantityChange(quantity + 1)}
+          className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors"
+        >
+          <FiPlus size={14} />
+        </button>
+      </div>
+
+      
+      {/* زر الحذف */}
+      <button
+        onClick={handleRemoveItem}
+        className="w-8 h-8 rounded-full text-red-500 hover:bg-red-50 flex items-center justify-center transition-colors"
+      >
+        <FiTrash2 size={16} />
+      </button>
+    </div>
+  );
 }

@@ -5,33 +5,74 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState(null);
+  const [userRole, setUserRole] = useState(null);
+  const [username, setUsername] = useState(null);
 
   // التحقق من localStorage عند تحميل التطبيق
   useEffect(() => {
     const token = localStorage.getItem('token');
     const email = localStorage.getItem('userEmail');
-    if (token && email) {
+    const role = localStorage.getItem('userRole');
+    const storedUsername = localStorage.getItem('username');
+    
+    if (token && (email || storedUsername)) {
       setIsLoggedIn(true);
       setUserEmail(email);
+      setUserRole(role);
+      setUsername(storedUsername);
     }
   }, []);
 
-  const login = (token, email) => {
+  const login = (token, emailOrUsername, role = 'customer') => {
     localStorage.setItem('token', token);
-    localStorage.setItem('userEmail', email);
+    localStorage.setItem('userRole', role);
+    localStorage.setItem('username', emailOrUsername);
+    
+    // If it looks like an email, store it as email too
+    if (emailOrUsername.includes('@')) {
+      localStorage.setItem('userEmail', emailOrUsername);
+      setUserEmail(emailOrUsername);
+    }
+    
     setIsLoggedIn(true);
-    setUserEmail(email);
+    setUserRole(role);
+    setUsername(emailOrUsername);
   };
 
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userEmail');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('username');
     setIsLoggedIn(false);
     setUserEmail(null);
+    setUserRole(null);
+    setUsername(null);
   };
 
+  const getAuthHeaders = (contentType = null) => {
+  const token = localStorage.getItem('token');
+  const headers = {
+    'Authorization': `Bearer ${token}`
+  };
+  
+  if (contentType) {
+    headers['Content-Type'] = contentType;
+  }
+  
+  return headers;
+};
+
   return (
-    <AuthContext.Provider value={{ isLoggedIn, userEmail, login, logout }}>
+    <AuthContext.Provider value={{ 
+      isLoggedIn, 
+      userEmail, 
+      userRole, 
+      username,
+      login, 
+      logout, 
+      getAuthHeaders 
+    }}>
       {children}
     </AuthContext.Provider>
   );

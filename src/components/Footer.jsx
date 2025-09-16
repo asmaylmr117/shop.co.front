@@ -58,7 +58,7 @@ export default function Footer() {
           <div id="1" className="flex-grow w-full lg:w-auto flex flex-col gap-10 ml-5 lg:ml-10">
             <h1 className="bolded text-3xl">SHOP.CO</h1>
             <p className="max-w-72 sm:max-w-full sm:text-left">
-              We have clothes that suits your style and<br></br> which you’re proud to wear. From women to men.
+              We have clothes that suits your style and<br></br> which you're proud to wear. From women to men.
             </p>
             <div className="flex gap-5">
               <FaXTwitter size={25} />
@@ -72,40 +72,40 @@ export default function Footer() {
             <div id="2" className="w-full flex flex-col gap-2 items-center lg:items-start text-xs sm:text-sm">
               <h1 className="font-semibold text-base sm:text-lg">Company</h1>
               <ul className="flex flex-col gap-1 sm:gap-2">
-                <li className="Links">About</li>
-                <li className="Links">Features of SHOP.CO</li>
-                <li className="Links">Works</li>
-                <li className="Links">Career</li>
+                <li><a href="/About">About</a></li>
+                <li ><a href="/shop">Features of SHOP.CO</a></li>
+                <li ><a href="/shop">Works</a></li>
+                <li ><a href="/About">Career</a></li>
               </ul>
             </div>
 
             <div id="3" className="w-full flex flex-col gap-2 items-center lg:items-start text-xs sm:text-sm">
               <h1 className="font-semibold text-base sm:text-lg">Help</h1>
               <ul className="flex flex-col gap-1 sm:gap-2">
-                <li className="Links">Customer Support</li>
-                <li className="Links">Delivery Details</li>
-                <li className="Links">Terms & Conditions</li>
-                <li className="Links">Privacy Policy</li>
+                <li ><a href="/Contact">Customer Support</a></li>
+                <li ><a href="/orders">Delivery Details</a></li>
+                <li >Terms & Conditions</li>
+                <li >Privacy Policy</li>
               </ul>
             </div>
 
             <div id="4" className="w-full flex flex-col gap-2 items-center lg:items-start text-xs sm:text-sm">
               <h1 className="font-semibold text-base sm:text-lg">FAQ</h1>
               <ul className="flex flex-col gap-1 sm:gap-2">
-                <li className="Links">Account</li>
-                <li className="Links">Manage Deliveries</li>
-                <li className="Links">Orders</li>
-                <li className="Links">Payments</li>
+                <li ><a href="/profile">Account</a></li>
+                <li ><a href="/orders">Manage Deliveries</a></li>
+                <li ><a href="/orders">Orders</a></li>
+                <li >Payments</li>
               </ul>
             </div>
 
             <div id="5" className="w-full flex flex-col gap-2 items-center lg:items-start text-xs sm:text-sm">
               <h1 className="font-semibold text-base sm:text-lg">Resources</h1>
               <ul className="flex flex-col gap-1 sm:gap-2">
-                <li className="Links">Free eBooks</li>
-                <li className="Links">Development Tutorial</li>
-                <li className="Links">How to - Blog</li>
-                <li className="Links">Youtube Playlist</li>
+                <li >Free eBooks</li>
+                <li >Development Tutorial</li>
+                <li >How to - Blog</li>
+                <li >Youtube Playlist</li>
               </ul>
             </div>
           </div>
@@ -113,7 +113,7 @@ export default function Footer() {
 
         <div className="flex justify-center mt-10 gap-y-5 border-t-4 items-center flex-wrap">
           <div className="flex-grow text-center md:text-left">
-            <a className="text-blue-800 ml-5" href="#">Developed by DevnityCode Copyright © 2025 </a>
+            <a className="text-blue-800 ml-5" href="#"> Copyright © 2025 </a>
           </div>
           <div className="w-fit">
             <PaymentsLogos />

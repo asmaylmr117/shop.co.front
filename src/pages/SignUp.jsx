@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../AuthContext';
 
 export default function Signup() {
   const [formData, setFormData] = useState({
@@ -8,7 +9,9 @@ export default function Signup() {
     password: '',
   });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -16,9 +19,11 @@ export default function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
 
     try {
-      const response = await fetch('https://shop-co-back.vercel.app/api/auth/signup', {
+      const response = await fetch('https://shopbackco.vercel.app/api/auth/customer/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -30,15 +35,19 @@ export default function Signup() {
         }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error('Signup failed');
+        throw new Error(data.message || 'Registration failed');
       }
 
-      const data = await response.json();
-      localStorage.setItem('token', data.token);
-      navigate('/'); // Redirect to home page
+      // تسجيل الدخول تلقائياً بعد التسجيل الناجح
+      login(data.token, formData.username, 'customer');
+      navigate('/'); // الانتقال للصفحة الرئيسية
     } catch (err) {
-      setError('Something went wrong. Please try again.');
+      setError(err.message || 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -59,7 +68,9 @@ export default function Signup() {
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {error && (
-            <div className="text-red-500 text-center text-sm">{error}</div>
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative">
+              {error}
+            </div>
           )}
 
           <div className="rounded-md shadow-sm -space-y-px">
@@ -107,9 +118,14 @@ export default function Signup() {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-black hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              disabled={loading}
+              className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${
+                loading 
+                  ? 'bg-gray-400 cursor-not-allowed' 
+                  : 'bg-black hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+              }`}
             >
-              Sign up
+              {loading ? 'Creating account...' : 'Sign up'}
             </button>
           </div>
         </form>

@@ -18,37 +18,69 @@ import Empty from '../Svgs/Empty.svg'
 import Error from '../Svgs/Error.svg'
 import Confirm from '../Svgs/Confirm.svg'
 
-
 import { motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 
-export default function Img({from='any',img,...prop}) {
+export default function Img({from='any', img, src, ...prop}) {
   const [myImg, setMyImg] = useState();
-  useEffect(()=>{
-    if(img==='1')setMyImg(Svg1)
-    if(img==='2')setMyImg(Svg2)
-    if(img==='3')setMyImg(Svg3)
-    if(img==='4')setMyImg(Svg4)
-    if(img==='5')setMyImg(Svg5)
-    if(img==='6')setMyImg(Svg6)
-    if(img==='7')setMyImg(Svg7)
-    if(img==='8')setMyImg(Svg8)
-    if(img==='9')setMyImg(Svg9)
-    if(img==='11')setMyImg(Svg11)
-    if(img==='12')setMyImg(Svg12)
-    if(img==='13')setMyImg(Svg13)
-    if(img==='14')setMyImg(Svg14)
-    if(img==='15')setMyImg(Svg15)
-    if(img==='BlackStar')setMyImg(Vector)
-    if(img==='ManAndWomen')setMyImg(MainSvg)
-    if(img==='Empty')setMyImg(Empty)
-    if(img==='Error')setMyImg(Error)
-    if(img==='Confirm')setMyImg(Confirm)
-  },[prop.src])
+  const [imageError, setImageError] = useState(false);
+
+  useEffect(() => {
+    // إذا كان هناك src (URL خارجي)، استخدمه مباشرة
+    if (src && (src.startsWith('http') || src.startsWith('https') || src.startsWith('/'))) {
+      setMyImg(src);
+      setImageError(false);
+      return;
+    }
+
+    // وإلا استخدم النظام القديم للـ SVGs المحلية
+    if(img === '1') setMyImg(Svg1)
+    if(img === '2') setMyImg(Svg2)
+    if(img === '3') setMyImg(Svg3)
+    if(img === '4') setMyImg(Svg4)
+    if(img === '5') setMyImg(Svg5)
+    if(img === '6') setMyImg(Svg6)
+    if(img === '7') setMyImg(Svg7)
+    if(img === '8') setMyImg(Svg8)
+    if(img === '9') setMyImg(Svg9)
+    if(img === '11') setMyImg(Svg11)
+    if(img === '12') setMyImg(Svg12)
+    if(img === '13') setMyImg(Svg13)
+    if(img === '14') setMyImg(Svg14)
+    if(img === '15') setMyImg(Svg15)
+    if(img === 'BlackStar') setMyImg(Vector)
+    if(img === 'ManAndWomen') setMyImg(MainSvg)
+    if(img === 'Empty') setMyImg(Empty)
+    if(img === 'Error') setMyImg(Error)
+    if(img === 'Confirm') setMyImg(Confirm)
+  }, [src, img])
+
+  const handleImageError = () => {
+    setImageError(true);
+    // في حالة فشل تحميل الصورة، استخدم صورة الخطأ
+    setMyImg(Error);
+  };
+
+  const handleImageLoad = () => {
+    setImageError(false);
+  };
 
   return (
     <div className={prop.className}>
-      <img draggable='false' className='w-full h-full' src={myImg} alt="" />
+      {myImg ? (
+        <img 
+          draggable='false' 
+          className='w-full h-full object-contain' 
+          src={myImg} 
+          alt={prop.alt || ""} 
+          onError={handleImageError}
+          onLoad={handleImageLoad}
+        />
+      ) : (
+        <div className='w-full h-full flex items-center justify-center bg-gray-200 rounded'>
+          <span className='text-gray-500'>Loading...</span>
+        </div>
+      )}
     </div>
   )
 }

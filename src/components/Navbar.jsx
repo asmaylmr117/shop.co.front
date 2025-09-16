@@ -1,169 +1,358 @@
-import { useContext, useRef, useState } from 'react';
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
-import { Link, useNavigate } from "react-router-dom";
-import { SideNavCtx } from '../store/SideNavContext';
-import { CartCtx } from '../store/CartContext';
+import { useContext, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom'; // Add useNavigate
 import { AuthContext } from '../AuthContext';
+import { CartCtx } from '../store/CartContext';
+import { FiUser, FiShoppingCart, FiMenu, FiX, FiSearch } from 'react-icons/fi'; // Add FiSearch
 
 export default function Navbar() {
-  const [hidden, setHidden] = useState(false);
-  const { sideNavHidden, setSideNavHidden } = useContext(SideNavCtx);
-  const { Cart } = useContext(CartCtx);
-  const { isLoggedIn, userEmail, logout } = useContext(AuthContext);
-  const cartRef = useRef();
-  const navigate = useNavigate();
-  const { scrollY } = useScroll();
-  const search = useRef();
+  const { isLoggedIn, username, userRole, logout } = useContext(AuthContext);
+  const { Cart, cartItems, Cost } = useContext(CartCtx);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(''); // State for search input
+  const location = useLocation();
+  const navigate = useNavigate(); // Hook for navigation
 
-  useMotionValueEvent(scrollY, 'change', (latest) => {
-    const prev = scrollY.getPrevious();
-    if (latest > prev && latest > 250) {
-      setHidden(true);
-    } else {
-      setHidden(false);
-    }
-  });
+  const navigation = [
+    { name: 'Home', href: '/' },
+    { name: 'Shop', href: '/shop' },
+    { name: 'About', href: '/About' },
+    { name: 'Contact', href: '/Contact' },
+  ];
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    navigate(`/Shop/${search.current.value}`);
-  };
-
-  const toggleSideNav = () => {
-    setSideNavHidden(!sideNavHidden);
+  const isActive = (path) => {
+    return location.pathname === path;
   };
 
   const handleLogout = () => {
-    logout(); 
-    navigate('/Login');
+    logout();
+    setShowUserMenu(false);
   };
 
+  const getTotalItemCount = () => {
+    if (!cartItems || !Array.isArray(cartItems)) {
+      console.log('Cart items not available or not an array:', cartItems);
+      return 0;
+    }
+    const total = cartItems.reduce((total, item) => {
+      const quantity = parseInt(item.Quantity) || 1;
+      return total + quantity;
+    }, 0);
+    console.log('Total item count:', total, 'from items:', cartItems);
+    return total;
+  };
+
+  const displayCount = getTotalItemCount();
+
+  // Handle search submission
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      // Navigate to Shop page with search query as a URL parameter
+      navigate(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery(''); // Clear the input
+    }
+  };
+
+  console.log('Navbar render - Cart:', Cart, 'Items:', cartItems, 'Display count:', displayCount);
+
   return (
-    <motion.div
-    variants={{
-      visible: { y: 0 },
-      hidden: { y: '-160%' }
-    }}
-    animate={hidden ? 'hidden' : 'visible'}
-    transition={{ duration: 0.3 }}
-    className='sticky top-0 bg-white shadow-md z-50 pb-4'
-  >
-    <motion.nav
-      className="bg-white w-full mainPadding py-4 flex flex-col nav:flex-row items-center nav:gap-12 gap-5 justify-between"
-    >
-     
-      <div className="hidden nav:block mt-3">
-        <ul className="flex gap-5">
-          <motion.li initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }}>
-            <Link className="Links" to='/Shop'>Shop</Link>
-          </motion.li>
-          <motion.li initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }}>
-            <Link className="Links" to='/NewArrival'>New Arrivals</Link>
-          </motion.li>
-          <motion.li initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }}>
-            <Link className="Links" to='/TopSelling'>Top Selling</Link>
-          </motion.li>
-          <motion.li initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }}>
-            <Link className="Links" to='/OnSale'>On Sale</Link>
-          </motion.li>
-          {!isLoggedIn && (
-            <>
-              <motion.li initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }}>
-                <Link className="Links" to='/Login'>Login</Link>
-              </motion.li>
-              <motion.li initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }}>
-                <Link className="Links" to='/Signup'>Sign Up</Link>
-              </motion.li>
-            </>
-          )}
-        </ul>
-      </div>
-  
-     
-      <div className='lg:flex-grow'>
-      <motion.form
-        initial={{ opacity: 0, y: 100 }} 
-        animate={{ opacity: 1, y: 0 }}
-        className="bg-gray-100 p-1 px-3 rounded-full flex mt-3 gap-2 w-full max-w-sm nav:max-w-md"
-        onSubmit={handleFormSubmit}
-      >
-        <button type="submit">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-            <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-          </svg>
-        </button>
-        <input ref={search} className="p-1 outline-none w-full bg-transparent" type="text" placeholder="Search for products..." />
-      </motion.form>
-    </div>
-  
-     
-      <motion.div
-        initial={{ opacity: 0, y: 100 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col nav:flex-row gap-3 xsm:mt-3 items-center w-full"
-      >
-       
-        <div className="flex items-center justify-between w-full space-x-6 nav:space-x-0">
-          <motion.span initial={{ opacity: 0, y: 100 }} animate={{ opacity: 1, y: 0 }}>
-            <Link className="text-2xl xsm:text-4xl font-bold bolded" to=''>SHOP.CO</Link>
-          </motion.span>
-  
-          <div className="flex items-center gap-6 nav:gap-3">
-            <div className='relative'>
-              {Cart !== 0 && (
-                <motion.div
-                  initial={{ scale: 1.2, y: -18, x: 18 }}
-                  animate={{ scale: 1, y: -18, x: 18 }}
-                  transition={{ duration: 0.3 }}
-                  key={Cart}
-                  className='absolute translate-x-5 -translate-y-4 w-1 h-1 rounded-full bg-black flex items-center justify-center text-white p-3'
-                >
-                  {Cart}
-                </motion.div>
-              )}
-              <Link to='Cart'>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
-                </svg>
+    <nav className="bg-white shadow-lg sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16">
+          {/* Logo */}
+          <div className="flex items-center">
+            <Link to="/" className="flex-shrink-0">
+              <h1 className="text-2xl font-bold text-gray-900">SHOP.CO</h1>
+            </Link>
+          </div>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-8">
+            {navigation.map((item) => (
+              <Link
+                key={item.name}
+                to={item.href}
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  isActive(item.href)
+                    ? 'text-indigo-600 bg-indigo-50'
+                    : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50'
+                }`}
+              >
+                {item.name}
               </Link>
+            ))}
+          </div>
+
+          {/* Right side - User actions */}
+          <div className="flex items-center space-x-4">
+            {/* Search */}
+            <div className="relative hidden md:block">
+              <form onSubmit={handleSearch}>
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  className="px-4 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 pl-10"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <button
+                  type="submit"
+                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-indigo-600"
+                >
+                  <FiSearch className="h-5 w-5" />
+                </button>
+              </form>
             </div>
-  
-            <div className={`${Cart ? 'ml-3' : ''} cursor-pointer block nav:hidden`} onClick={toggleSideNav}>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-              </svg>
+
+            {/* Cart */}
+            <Link
+              to="/cart"
+              className="relative p-2 text-gray-600 hover:text-indigo-600 transition-colors"
+            >
+              <FiShoppingCart className="h-6 w-6" />
+              {displayCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {displayCount > 99 ? '99+' : displayCount}
+                </span>
+              )}
+            </Link>
+
+            {/* Cost Display (optional) */}
+            {Cost > 0 && (
+              <div className="hidden md:block text-sm text-gray-600">
+                ${Cost.toFixed(2)}
+              </div>
+            )}
+
+            {/* User Menu */}
+            {isLoggedIn ? (
+              <div className="relative">
+                <button
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  className="flex items-center space-x-2 p-2 text-gray-600 hover:text-indigo-600 transition-colors"
+                >
+                  <FiUser className="h-6 w-6" />
+                  <span className="hidden md:block text-sm font-medium">
+                    {username}
+                  </span>
+                  {userRole === 'admin' && (
+                    <span className="hidden md:block bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full">
+                      Admin
+                    </span>
+                  )}
+                </button>
+
+                {showUserMenu && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                    <Link
+                      to="/profile"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      onClick={() => setShowUserMenu(false)}
+                    >
+                      Profile
+                    </Link>
+                    {userRole !== 'admin' && (
+                      <Link
+                        to="/orders"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => setShowUserMenu(false)}
+                      >
+                        My Orders
+                      </Link>
+                    )}
+                    {userRole === 'admin' && (
+                      <>
+                        <hr className="my-1" />
+                        <Link
+                          to="/AdminProducts"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          onClick={() => setShowUserMenu(false)}
+                        >
+                          Manage Products
+                        </Link>
+                        <Link
+                          to="/AdminOrders"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          onClick={() => setShowUserMenu(false)}
+                        >
+                          Manage Orders
+                        </Link>
+                      </>
+                    )}
+                    <hr className="my-1" />
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <Link
+                  to="/login"
+                  className="text-gray-600 hover:text-indigo-600 px-3 py-2 text-sm font-medium transition-colors"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/signup"
+                  className="bg-indigo-600 text-white hover:bg-indigo-700 px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  Sign Up
+                </Link>
+              </div>
+            )}
+
+            {/* Mobile menu button */}
+            <div className="md:hidden">
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="p-2 text-gray-600 hover:text-indigo-600 transition-colors"
+              >
+                {isMenuOpen ? (
+                  <FiX className="h-6 w-6" />
+                ) : (
+                  <FiMenu className="h-6 w-6" />
+                )}
+              </button>
             </div>
           </div>
         </div>
-  
-        
-        {isLoggedIn ? (
-          <div className="flex flex-row flex-nowrap items-center gap-3 mt-2 nav:mt-0 w-full justify-center">
-            <span className="text-sm font-medium text-black whitespace-nowrap">
-              Welcome, {userEmail}!
-            </span>
-            <button
-              onClick={handleLogout}
-              className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition duration-200 whitespace-nowrap"
-            >
-              Logout
-            </button>
-          </div>
-        ) : (
-          <div className="flex gap-3">
-            <Link to='/Login' className="hidden md:block px-4 py-2 text-sm font-medium text-white bg-black rounded-md hover:bg-gray-400 transition duration-200">
-              Login
-            </Link>
-            <Link
-              to='/SignUp'
-              className="hidden md:block px-4 py-2 text-sm font-medium text-black bg-white rounded-md border border-black hover:bg-gray-200 transition duration-200"
-            >
-              Sign Up
-            </Link>
+
+        {/* Mobile Navigation */}
+        {isMenuOpen && (
+          <div className="md:hidden">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-50">
+              <div className="px-3 py-2">
+                <form onSubmit={handleSearch}>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="Search products..."
+                      className="w-full px-4 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 pl-10"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                    <button
+                      type="submit"
+                      className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-indigo-600"
+                    >
+                      <FiSearch className="h-5 w-5" />
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={`block px-3 py-2 rounded-md text-base font-medium ${
+                    isActive(item.href)
+                      ? 'text-indigo-600 bg-indigo-50'
+                      : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-100'
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              ))}
+
+              <div className="px-3 py-2 text-sm text-gray-600">
+                Cart: {displayCount} items - ${Cost.toFixed(2)}
+              </div>
+
+              {isLoggedIn ? (
+                <>
+                  <hr className="my-2" />
+                  <div className="px-3 py-2">
+                    <p className="text-sm text-gray-500">
+                      Logged in as: <span className="font-medium text-gray-900">{username}</span>
+                      {userRole === 'admin' && (
+                        <span className="ml-2 bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full">
+                          Admin
+                        </span>
+                      )}
+                    </p>
+                  </div>
+                  <Link
+                    to="/profile"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-100"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Profile
+                  </Link>
+                  {userRole !== 'admin' && (
+                    <Link
+                      to="/orders"
+                      className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-100"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      My Orders
+                    </Link>
+                  )}
+                  {userRole === 'admin' && (
+                    <>
+                      <Link
+                        to="/AdminProducts"
+                        className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-100"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Manage Products
+                      </Link>
+                      <Link
+                        to="/AdminOrders"
+                        className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-100"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Manage Orders
+                      </Link>
+                    </>
+                  )}
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setIsMenuOpen(false);
+                    }}
+                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-gray-100"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <hr className="my-2" />
+                  <Link
+                    to="/login"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-100"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="block px-3 py-2 rounded-md text-base font-medium bg-indigo-600 text-white hover:bg-indigo-700"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Sign Up
+                  </Link>
+                </>
+              )}
+            </div>
           </div>
         )}
-      </motion.div>
-    </motion.nav>
-  </motion.div>
+      </div>
+
+      {showUserMenu && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setShowUserMenu(false)}
+        />
+      )}
+    </nav>
   );
 }
