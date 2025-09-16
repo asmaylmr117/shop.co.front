@@ -14,9 +14,11 @@
 - **Tailwind CSS**
 - **JavaScript**
 - **React.js**
-- **Redux**
-- **Redux Toolkit**
-
+- **Context**
+- **framer-motion**
+- **react-router-dom**
+- **react-icons**
+- **lucide-react**
 ## 🛒 Features
 
 - Browse a variety of clothing categories for men, women, and kids.
