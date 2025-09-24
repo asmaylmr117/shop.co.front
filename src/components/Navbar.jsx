@@ -199,11 +199,12 @@ export default function Navbar() {
                   Login
                 </Link>
                 <Link
-                  to="/signup"
-                  className="bg-indigo-600 text-white hover:bg-indigo-700 px-4 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  Sign Up
-                </Link>
+                 to="/signup"
+                 className="bg-indigo-600 text-white hover:bg-indigo-700 px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap"
+                      >
+                     Sign Up
+                      </Link>
+
               </div>
             )}
 
