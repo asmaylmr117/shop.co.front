@@ -136,13 +136,12 @@ export default function Home({ to = '' }) {
             </div>
           </div>
 
-          {/* الصورة */}
           <div
             className="lg:w-1/2 w-full h-screen"
             style={{ width: '100vw', height: '85%', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}
           >
             <img
-              src="model.png"
+              src="heroimg.png"
               alt="Stylish couple wearing fashionable clothes"
               style={{ width: '100vw', height: '85%', objectFit: 'cover' }}
             />
