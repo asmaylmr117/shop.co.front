@@ -28,7 +28,7 @@
 - Search and filtering options.
 - Responsive design that works across all devices.
 - Clean and modern UI with Tailwind CSS.
-- State management using Redux Toolkit.
+- State management using Context.
 
 
 
