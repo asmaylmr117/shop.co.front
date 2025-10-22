@@ -173,7 +173,7 @@ export default function Home({ to = '' }) {
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">New Arrivals</h2>
             </Reavel>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4 sm:px-0">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 justify-items-center">
               {products.slice(4, 8).map((product, index) => (
                 <motion.div
                   key={product.id}
