@@ -155,7 +155,7 @@ export default function Home({ to = '' }) {
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mx-5 mb-6">
           {error}
-          </div>
+        </div>
       )}
 
       {/* Loading State */}
@@ -173,15 +173,16 @@ export default function Home({ to = '' }) {
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">New Arrivals</h2>
             </Reavel>
 
-            {/* **التعديل هنا:** grid-cols-1 افتراضيا لملء العرض، و md:grid-cols-2 للبدء بعمودين على الشاشات المتوسطة */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6">
+            {/* تم تعديل الحاوية هنا لضمان grid-cols-1 على الشاشات الصغيرة */}
+            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6">
               {products.slice(4, 8).map((product, index) => (
                 <motion.div
                   key={product.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                  {/* **التعديل هنا:** w-full لإجبارها على التمدد، و p-4 لإضافة مساحة داخلية جيدة. */}
+                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow w-full p-4"
                 >
                   <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden bg-gray-200">
                     {product.image_data ? (
@@ -244,15 +245,15 @@ export default function Home({ to = '' }) {
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">Top Selling</h2>
             </Reavel>
 
-            {/* **التعديل هنا:** grid-cols-1 افتراضيا لملء العرض، و md:grid-cols-2 للبدء بعمودين على الشاشات المتوسطة */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6">
               {products.slice(2,6).map((product, index) => (
                 <motion.div
                   key={product.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                  {/* **التعديل هنا:** w-full لإجبارها على التمدد، و p-4 لإضافة مساحة داخلية جيدة. */}
+                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow w-full p-4"
                 >
                   <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden bg-gray-200">
                     {product.image_data ? (
@@ -316,15 +317,15 @@ export default function Home({ to = '' }) {
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">On Sale</h2>
             </Reavel>
 
-            {/* **التعديل هنا:** grid-cols-1 افتراضيا لملء العرض، و md:grid-cols-2 للبدء بعمودين على الشاشات المتوسطة */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6">
               {products.slice(5,9).map((product, index) => (
                 <motion.div
                   key={product.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                  {/* **التعديل هنا:** w-full لإجبارها على التمدد، و p-4 لإضافة مساحة داخلية جيدة. */}
+                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow w-full p-4"
                 >
                   <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden bg-gray-200">
                     {product.image_data ? (
@@ -388,15 +389,15 @@ export default function Home({ to = '' }) {
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">FEATURED PRODUCTS</h2>
             </Reavel>
 
-            {/* **التعديل هنا:** grid-cols-1 افتراضيا لملء العرض، و md:grid-cols-2 للبدء بعمودين على الشاشات المتوسطة */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6">
               {products.slice(0, 4).map((product, index) => (
                 <motion.div
                   key={product.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                  {/* **التعديل هنا:** w-full لإجبارها على التمدد، و p-4 لإضافة مساحة داخلية جيدة. */}
+                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow w-full p-4"
                 >
                   <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden bg-gray-200">
                     {product.image_data ? (
