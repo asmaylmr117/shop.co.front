@@ -173,7 +173,7 @@ export default function Home({ to = '' }) {
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">New Arrivals</h2>
             </Reavel>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6">
               {products.slice(4, 8).map((product, index) => (
                 <motion.div
                   key={product.id}
@@ -187,38 +187,38 @@ export default function Home({ to = '' }) {
                       <img
                         src={`data:image/jpeg;base64,${product.image_data}`}
                         alt={product.name}
-                        className="w-full h-48 object-cover hover:scale-105 transition-transform"
+                        className="w-full h-64 sm:h-48 object-cover hover:scale-105 transition-transform"
                       />
                     ) : (
-                      <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
+                      <div className="w-full h-64 sm:h-48 bg-gray-200 flex items-center justify-center">
                         <span className="text-gray-400">No Image</span>
                       </div>
                     )}
                   </div>
 
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  <div className="p-6 sm:p-4">
+                    <h3 className="text-xl sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-2">
                       {product.name}
                     </h3>
-                    <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                    <p className="text-base sm:text-sm text-gray-600 mb-4 sm:mb-3 line-clamp-2">
                       {product.description}
                     </p>
 
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4 sm:mb-0">
                       <div className="flex items-center space-x-2">
-                        <span className="text-lg font-bold text-gray-900">
+                        <span className="text-2xl sm:text-lg font-bold text-gray-900">
                           ${product.price}
                         </span>
                         {product.discount > 0 && (
-                          <span className="text-sm text-green-600 bg-green-100 px-2 py-1 rounded">
+                          <span className="text-base sm:text-sm text-green-600 bg-green-100 px-3 py-1.5 sm:px-2 sm:py-1 rounded">
                             {product.discount}% OFF
                           </span>
                         )}
                       </div>
 
                       <div className="flex items-center">
-                        <span className="text-yellow-400">★</span>
-                        <span className="text-sm text-gray-600 ml-1">
+                        <span className="text-yellow-400 text-xl sm:text-base">★</span>
+                        <span className="text-base sm:text-sm text-gray-600 ml-1">
                           {product.stars}
                         </span>
                       </div>
@@ -226,7 +226,7 @@ export default function Home({ to = '' }) {
 
                     <Link
                       to={`/Shop/${encodeURIComponent(product.name)}`}
-                      className="mt-4 block w-full bg-black text-white text-center py-2 rounded-lg hover:bg-gray-800 transition-colors"
+                      className="mt-5 sm:mt-4 block w-full bg-black text-white text-center py-3 sm:py-2 rounded-lg hover:bg-gray-800 transition-colors text-base sm:text-sm"
                     >
                       View Product
                     </Link>
@@ -240,10 +240,10 @@ export default function Home({ to = '' }) {
            {/* Top Selling */}
           <div className="mainPadding py-16 bg-gray-50">
             <Reavel>
-              <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">Top TopSelling</h2>
+              <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">Top Selling</h2>
             </Reavel>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6">
               {products.slice(2,6).map((product, index) => (
                 <motion.div
                   key={product.id}
@@ -257,38 +257,38 @@ export default function Home({ to = '' }) {
                       <img
                         src={`data:image/jpeg;base64,${product.image_data}`}
                         alt={product.name}
-                        className="w-full h-48 object-cover hover:scale-105 transition-transform"
+                        className="w-full h-64 sm:h-48 object-cover hover:scale-105 transition-transform"
                       />
                     ) : (
-                      <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
+                      <div className="w-full h-64 sm:h-48 bg-gray-200 flex items-center justify-center">
                         <span className="text-gray-400">No Image</span>
                       </div>
                     )}
                   </div>
 
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  <div className="p-6 sm:p-4">
+                    <h3 className="text-xl sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-2">
                       {product.name}
                     </h3>
-                    <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                    <p className="text-base sm:text-sm text-gray-600 mb-4 sm:mb-3 line-clamp-2">
                       {product.description}
                     </p>
 
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4 sm:mb-0">
                       <div className="flex items-center space-x-2">
-                        <span className="text-lg font-bold text-gray-900">
+                        <span className="text-2xl sm:text-lg font-bold text-gray-900">
                           ${product.price}
                         </span>
                         {product.discount > 0 && (
-                          <span className="text-sm text-green-600 bg-green-100 px-2 py-1 rounded">
+                          <span className="text-base sm:text-sm text-green-600 bg-green-100 px-3 py-1.5 sm:px-2 sm:py-1 rounded">
                             {product.discount}% OFF
                           </span>
                         )}
                       </div>
 
                       <div className="flex items-center">
-                        <span className="text-yellow-400">★</span>
-                        <span className="text-sm text-gray-600 ml-1">
+                        <span className="text-yellow-400 text-xl sm:text-base">★</span>
+                        <span className="text-base sm:text-sm text-gray-600 ml-1">
                           {product.stars}
                         </span>
                       </div>
@@ -296,7 +296,7 @@ export default function Home({ to = '' }) {
 
                     <Link
                       to={`/Shop/${encodeURIComponent(product.name)}`}
-                      className="mt-4 block w-full bg-black text-white text-center py-2 rounded-lg hover:bg-gray-800 transition-colors"
+                      className="mt-5 sm:mt-4 block w-full bg-black text-white text-center py-3 sm:py-2 rounded-lg hover:bg-gray-800 transition-colors text-base sm:text-sm"
                     >
                       View Product
                     </Link>
@@ -314,7 +314,7 @@ export default function Home({ to = '' }) {
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">On Sale</h2>
             </Reavel>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6">
               {products.slice(5,9).map((product, index) => (
                 <motion.div
                   key={product.id}
@@ -328,38 +328,38 @@ export default function Home({ to = '' }) {
                       <img
                         src={`data:image/jpeg;base64,${product.image_data}`}
                         alt={product.name}
-                        className="w-full h-48 object-cover hover:scale-105 transition-transform"
+                        className="w-full h-64 sm:h-48 object-cover hover:scale-105 transition-transform"
                       />
                     ) : (
-                      <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
+                      <div className="w-full h-64 sm:h-48 bg-gray-200 flex items-center justify-center">
                         <span className="text-gray-400">No Image</span>
                       </div>
                     )}
                   </div>
 
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  <div className="p-6 sm:p-4">
+                    <h3 className="text-xl sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-2">
                       {product.name}
                     </h3>
-                    <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                    <p className="text-base sm:text-sm text-gray-600 mb-4 sm:mb-3 line-clamp-2">
                       {product.description}
                     </p>
 
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4 sm:mb-0">
                       <div className="flex items-center space-x-2">
-                        <span className="text-lg font-bold text-gray-900">
+                        <span className="text-2xl sm:text-lg font-bold text-gray-900">
                           ${product.price}
                         </span>
                         {product.discount > 0 && (
-                          <span className="text-sm text-green-600 bg-green-100 px-2 py-1 rounded">
+                          <span className="text-base sm:text-sm text-green-600 bg-green-100 px-3 py-1.5 sm:px-2 sm:py-1 rounded">
                             {product.discount}% OFF
                           </span>
                         )}
                       </div>
 
                       <div className="flex items-center">
-                        <span className="text-yellow-400">★</span>
-                        <span className="text-sm text-gray-600 ml-1">
+                        <span className="text-yellow-400 text-xl sm:text-base">★</span>
+                        <span className="text-base sm:text-sm text-gray-600 ml-1">
                           {product.stars}
                         </span>
                       </div>
@@ -367,7 +367,7 @@ export default function Home({ to = '' }) {
 
                     <Link
                       to={`/Shop/${encodeURIComponent(product.name)}`}
-                      className="mt-4 block w-full bg-black text-white text-center py-2 rounded-lg hover:bg-gray-800 transition-colors"
+                      className="mt-5 sm:mt-4 block w-full bg-black text-white text-center py-3 sm:py-2 rounded-lg hover:bg-gray-800 transition-colors text-base sm:text-sm"
                     >
                       View Product
                     </Link>
@@ -385,7 +385,7 @@ export default function Home({ to = '' }) {
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">FEATURED PRODUCTS</h2>
             </Reavel>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6">
               {products.slice(0, 4).map((product, index) => (
                 <motion.div
                   key={product.id}
@@ -399,38 +399,38 @@ export default function Home({ to = '' }) {
                       <img
                         src={`data:image/jpeg;base64,${product.image_data}`}
                         alt={product.name}
-                        className="w-full h-48 object-cover hover:scale-105 transition-transform"
+                        className="w-full h-64 sm:h-48 object-cover hover:scale-105 transition-transform"
                       />
                     ) : (
-                      <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
+                      <div className="w-full h-64 sm:h-48 bg-gray-200 flex items-center justify-center">
                         <span className="text-gray-400">No Image</span>
                       </div>
                     )}
                   </div>
 
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  <div className="p-6 sm:p-4">
+                    <h3 className="text-xl sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-2">
                       {product.name}
                     </h3>
-                    <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                    <p className="text-base sm:text-sm text-gray-600 mb-4 sm:mb-3 line-clamp-2">
                       {product.description}
                     </p>
 
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4 sm:mb-0">
                       <div className="flex items-center space-x-2">
-                        <span className="text-lg font-bold text-gray-900">
+                        <span className="text-2xl sm:text-lg font-bold text-gray-900">
                           ${product.price}
                         </span>
                         {product.discount > 0 && (
-                          <span className="text-sm text-green-600 bg-green-100 px-2 py-1 rounded">
+                          <span className="text-base sm:text-sm text-green-600 bg-green-100 px-3 py-1.5 sm:px-2 sm:py-1 rounded">
                             {product.discount}% OFF
                           </span>
                         )}
                       </div>
 
                       <div className="flex items-center">
-                        <span className="text-yellow-400">★</span>
-                        <span className="text-sm text-gray-600 ml-1">
+                        <span className="text-yellow-400 text-xl sm:text-base">★</span>
+                        <span className="text-base sm:text-sm text-gray-600 ml-1">
                           {product.stars}
                         </span>
                       </div>
@@ -438,7 +438,7 @@ export default function Home({ to = '' }) {
 
                     <Link
                       to={`/Shop/${encodeURIComponent(product.name)}`}
-                      className="mt-4 block w-full bg-black text-white text-center py-2 rounded-lg hover:bg-gray-800 transition-colors"
+                      className="mt-5 sm:mt-4 block w-full bg-black text-white text-center py-3 sm:py-2 rounded-lg hover:bg-gray-800 transition-colors text-base sm:text-sm"
                     >
                       View Product
                     </Link>
