@@ -173,7 +173,7 @@ export default function Home({ to = '' }) {
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">New Arrivals</h2>
             </Reavel>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {products.slice(4, 8).map((product, index) => (
                 <motion.div
                   key={product.id}
@@ -243,7 +243,7 @@ export default function Home({ to = '' }) {
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">Top TopSelling</h2>
             </Reavel>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {products.slice(2,6).map((product, index) => (
                 <motion.div
                   key={product.id}
@@ -314,7 +314,7 @@ export default function Home({ to = '' }) {
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">On Sale</h2>
             </Reavel>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {products.slice(5,9).map((product, index) => (
                 <motion.div
                   key={product.id}
@@ -385,7 +385,7 @@ export default function Home({ to = '' }) {
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">FEATURED PRODUCTS</h2>
             </Reavel>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {products.slice(0, 4).map((product, index) => (
                 <motion.div
                   key={product.id}
