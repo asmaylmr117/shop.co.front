@@ -142,59 +142,50 @@ export default function Navbar() {
                 </button>
 
                 {showUserMenu && (
-                  <>
-                    {/* Overlay for closing the menu - HIGHER Z-INDEX */}
-                    <div
-                      className="fixed inset-0 z-[100]"
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                    <Link
+                      to="/profile"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       onClick={() => setShowUserMenu(false)}
-                    />
-                    
-                    {/* User dropdown menu - HIGHEST Z-INDEX */}
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-[101] border border-gray-200">
+                    >
+                      Profile
+                    </Link>
+                    {userRole !== 'admin' && (
                       <Link
-                        to="/profile"
+                        to="/orders"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         onClick={() => setShowUserMenu(false)}
                       >
-                        Profile
+                        My Orders
                       </Link>
-                      {userRole !== 'admin' && (
+                    )}
+                    {userRole === 'admin' && (
+                      <>
+                        <hr className="my-1" />
                         <Link
-                          to="/orders"
+                          to="/AdminProducts"
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                           onClick={() => setShowUserMenu(false)}
                         >
-                          My Orders
+                          Manage Products
                         </Link>
-                      )}
-                      {userRole === 'admin' && (
-                        <>
-                          <hr className="my-1" />
-                          <Link
-                            to="/AdminProducts"
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={() => setShowUserMenu(false)}
-                          >
-                            Manage Products
-                          </Link>
-                          <Link
-                            to="/AdminOrders"
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={() => setShowUserMenu(false)}
-                          >
-                            Manage Orders
-                          </Link>
-                        </>
-                      )}
-                      <hr className="my-1" />
-                      <button
-                        onClick={handleLogout}
-                        className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                      >
-                        Logout
-                      </button>
-                    </div>
-                  </>
+                        <Link
+                          to="/AdminOrders"
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          onClick={() => setShowUserMenu(false)}
+                        >
+                          Manage Orders
+                        </Link>
+                      </>
+                    )}
+                    <hr className="my-1" />
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                    >
+                      Logout
+                    </button>
+                  </div>
                 )}
               </div>
             ) : (
@@ -232,7 +223,7 @@ export default function Navbar() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden z-[60]">
+          <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-50">
               <div className="px-3 py-2">
                 <form onSubmit={handleSearch}>
@@ -353,6 +344,13 @@ export default function Navbar() {
           </div>
         )}
       </div>
+
+      {showUserMenu && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setShowUserMenu(false)}
+        />
+      )}
     </nav>
   );
 }
