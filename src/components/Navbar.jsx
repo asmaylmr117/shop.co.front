@@ -143,14 +143,14 @@ export default function Navbar() {
 
                 {showUserMenu && (
                   <>
-                    {/* Overlay for closing the menu */}
+                    {/* Overlay for closing the menu - HIGHER Z-INDEX */}
                     <div
-                      className="fixed inset-0 z-40"
+                      className="fixed inset-0 z-[100]"
                       onClick={() => setShowUserMenu(false)}
                     />
                     
-                    {/* User dropdown menu */}
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
+                    {/* User dropdown menu - HIGHEST Z-INDEX */}
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-[101] border border-gray-200">
                       <Link
                         to="/profile"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -232,7 +232,7 @@ export default function Navbar() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden">
+          <div className="md:hidden z-[60]">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-50">
               <div className="px-3 py-2">
                 <form onSubmit={handleSearch}>
