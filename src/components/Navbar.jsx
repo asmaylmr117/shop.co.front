@@ -142,50 +142,59 @@ export default function Navbar() {
                 </button>
 
                 {showUserMenu && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-                    <Link
-                      to="/profile"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  <>
+                    {/* Overlay for closing the menu */}
+                    <div
+                      className="fixed inset-0 z-40"
                       onClick={() => setShowUserMenu(false)}
-                    >
-                      Profile
-                    </Link>
-                    {userRole !== 'admin' && (
+                    />
+                    
+                    {/* User dropdown menu */}
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
                       <Link
-                        to="/orders"
+                        to="/profile"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         onClick={() => setShowUserMenu(false)}
                       >
-                        My Orders
+                        Profile
                       </Link>
-                    )}
-                    {userRole === 'admin' && (
-                      <>
-                        <hr className="my-1" />
+                      {userRole !== 'admin' && (
                         <Link
-                          to="/AdminProducts"
+                          to="/orders"
                           className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                           onClick={() => setShowUserMenu(false)}
                         >
-                          Manage Products
+                          My Orders
                         </Link>
-                        <Link
-                          to="/AdminOrders"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          onClick={() => setShowUserMenu(false)}
-                        >
-                          Manage Orders
-                        </Link>
-                      </>
-                    )}
-                    <hr className="my-1" />
-                    <button
-                      onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                    >
-                      Logout
-                    </button>
-                  </div>
+                      )}
+                      {userRole === 'admin' && (
+                        <>
+                          <hr className="my-1" />
+                          <Link
+                            to="/AdminProducts"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            onClick={() => setShowUserMenu(false)}
+                          >
+                            Manage Products
+                          </Link>
+                          <Link
+                            to="/AdminOrders"
+                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            onClick={() => setShowUserMenu(false)}
+                          >
+                            Manage Orders
+                          </Link>
+                        </>
+                      )}
+                      <hr className="my-1" />
+                      <button
+                        onClick={handleLogout}
+                        className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  </>
                 )}
               </div>
             ) : (
@@ -344,13 +353,6 @@ export default function Navbar() {
           </div>
         )}
       </div>
-
-      {showUserMenu && (
-        <div
-          className="fixed inset-0 z-40"
-          onClick={() => setShowUserMenu(false)}
-        />
-      )}
     </nav>
   );
 }
