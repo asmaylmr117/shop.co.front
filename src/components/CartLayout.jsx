@@ -11,7 +11,7 @@ export default function CartLayout({ item, updateCart, setCost }) {
       return;
     }
 
-    // تحديث localStorage
+    
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const itemIndex = cart.findIndex(cartItem => 
       cartItem.id === item.id && 
@@ -23,14 +23,14 @@ export default function CartLayout({ item, updateCart, setCost }) {
       cart[itemIndex].Quantity = newQuantity;
       localStorage.setItem('cart', JSON.stringify(cart));
       
-      // حساب التكلفة الجديدة
+      
       const newCost = cart.reduce((total, cartItem) => {
         return total + (parseFloat(cartItem.cost) || 0) * (parseInt(cartItem.Quantity) || 1);
       }, 0);
       
       setCost(newCost);
       setQuantity(newQuantity);
-      updateCart(); // تحديث السياق
+      updateCart(); 
     }
   };
 
@@ -44,13 +44,13 @@ export default function CartLayout({ item, updateCart, setCost }) {
     
     localStorage.setItem('cart', JSON.stringify(updatedCart));
     
-    // حساب التكلفة الجديدة
+    
     const newCost = updatedCart.reduce((total, cartItem) => {
       return total + (parseFloat(cartItem.cost) || 0) * (parseInt(cartItem.Quantity) || 1);
     }, 0);
     
     setCost(newCost);
-    updateCart(); // تحديث السياق
+    updateCart(); 
   };
 
   const itemTotal = (parseFloat(item.cost) || 0) * quantity;
@@ -90,7 +90,7 @@ export default function CartLayout({ item, updateCart, setCost }) {
         )}
       </div>
 
-      {/* التحكم في الكمية */}
+   
       <div className="flex items-center gap-2">
         <button
           onClick={() => handleQuantityChange(quantity - 1)}
@@ -110,7 +110,7 @@ export default function CartLayout({ item, updateCart, setCost }) {
       </div>
 
       
-      {/* زر الحذف */}
+  
       <button
         onClick={handleRemoveItem}
         className="w-8 h-8 rounded-full text-red-500 hover:bg-red-50 flex items-center justify-center transition-colors"
