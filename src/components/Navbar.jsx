@@ -1,17 +1,17 @@
 import { useContext, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom'; // Add useNavigate
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../AuthContext';
 import { CartCtx } from '../store/CartContext';
-import { FiUser, FiShoppingCart, FiMenu, FiX, FiSearch } from 'react-icons/fi'; // Add FiSearch
+import { FiUser, FiShoppingCart, FiMenu, FiX, FiSearch } from 'react-icons/fi';
 
 export default function Navbar() {
   const { isLoggedIn, username, userRole, logout } = useContext(AuthContext);
   const { Cart, cartItems, Cost } = useContext(CartCtx);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(''); // State for search input
+  const [searchQuery, setSearchQuery] = useState('');
   const location = useLocation();
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
 
   const navigation = [
     { name: 'Home', href: '/' },
@@ -44,26 +44,24 @@ export default function Navbar() {
 
   const displayCount = getTotalItemCount();
 
-  // Handle search submission
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      // Navigate to Shop page with search query as a URL parameter
       navigate(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
-      setSearchQuery(''); // Clear the input
+      setSearchQuery('');
     }
   };
 
   console.log('Navbar render - Cart:', Cart, 'Items:', cartItems, 'Display count:', displayCount);
 
   return (
-    <nav className="bg-white shadow-lg sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+    <nav className="bg-white shadow-lg sticky top-0 z-50 overflow-x-hidden">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0">
-              <h1 className="text-2xl font-bold text-gray-900">SHOP.CO</h1>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-900">SHOP.CO</h1>
             </Link>
           </div>
 
@@ -85,7 +83,7 @@ export default function Navbar() {
           </div>
 
           {/* Right side - User actions */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-4">
             {/* Search */}
             <div className="relative hidden md:block">
               <form onSubmit={handleSearch}>
@@ -108,9 +106,9 @@ export default function Navbar() {
             {/* Cart */}
             <Link
               to="/cart"
-              className="relative p-2 text-gray-600 hover:text-indigo-600 transition-colors"
+              className="relative p-1 sm:p-2 text-gray-600 hover:text-indigo-600 transition-colors"
             >
-              <FiShoppingCart className="h-6 w-6" />
+              <FiShoppingCart className="h-5 w-5 sm:h-6 sm:w-6" />
               {displayCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                   {displayCount > 99 ? '99+' : displayCount}
@@ -120,7 +118,7 @@ export default function Navbar() {
 
             {/* Cost Display (optional) */}
             {Cost > 0 && (
-              <div className="hidden md:block text-sm text-gray-600">
+              <div className="hidden lg:block text-sm text-gray-600">
                 ${Cost.toFixed(2)}
               </div>
             )}
@@ -130,14 +128,14 @@ export default function Navbar() {
               <div className="relative">
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="flex items-center space-x-2 p-2 text-gray-600 hover:text-indigo-600 transition-colors"
+                  className="flex items-center space-x-1 sm:space-x-2 p-1 sm:p-2 text-gray-600 hover:text-indigo-600 transition-colors"
                 >
-                  <FiUser className="h-6 w-6" />
+                  <FiUser className="h-5 w-5 sm:h-6 sm:w-6" />
                   <span className="hidden md:block text-sm font-medium">
                     {username}
                   </span>
                   {userRole === 'admin' && (
-                    <span className="hidden md:block bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full">
+                    <span className="hidden lg:block bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full">
                       Admin
                     </span>
                   )}
@@ -191,20 +189,19 @@ export default function Navbar() {
                 )}
               </div>
             ) : (
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-1 sm:space-x-2">
                 <Link
                   to="/login"
-                  className="text-gray-600 hover:text-indigo-600 px-3 py-2 text-sm font-medium transition-colors"
+                  className="text-gray-600 hover:text-indigo-600 px-2 sm:px-3 py-2 text-xs sm:text-sm font-medium transition-colors"
                 >
                   Login
                 </Link>
                 <Link
-                 to="/signup"
-                 className="bg-indigo-600 text-white hover:bg-indigo-700 px-3 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap"
-                      >
-                     Sign Up
-                      </Link>
-
+                  to="/signup"
+                  className="bg-indigo-600 text-white hover:bg-indigo-700 px-2 sm:px-4 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors whitespace-nowrap"
+                >
+                  Sign Up
+                </Link>
               </div>
             )}
 
@@ -212,7 +209,7 @@ export default function Navbar() {
             <div className="md:hidden">
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="p-2 text-gray-600 hover:text-indigo-600 transition-colors"
+                className="p-1 sm:p-2 text-gray-600 hover:text-indigo-600 transition-colors"
               >
                 {isMenuOpen ? (
                   <FiX className="h-6 w-6" />
