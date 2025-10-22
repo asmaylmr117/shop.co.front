@@ -173,14 +173,14 @@ export default function Home({ to = '' }) {
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">New Arrivals</h2>
             </Reavel>
 
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4 sm:px-0">
               {products.slice(4, 8).map((product, index) => (
                 <motion.div
                   key={product.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow max-w-md mx-auto sm:max-w-none"
                 >
                   <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden bg-gray-200">
                     {product.image_data ? (
@@ -243,14 +243,14 @@ export default function Home({ to = '' }) {
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">Top TopSelling</h2>
             </Reavel>
 
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4 sm:px-0">
               {products.slice(2,6).map((product, index) => (
                 <motion.div
                   key={product.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow max-w-md mx-auto sm:max-w-none"
                 >
                   <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden bg-gray-200">
                     {product.image_data ? (
@@ -314,14 +314,14 @@ export default function Home({ to = '' }) {
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">On Sale</h2>
             </Reavel>
 
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4 sm:px-0">
               {products.slice(5,9).map((product, index) => (
                 <motion.div
                   key={product.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow max-w-md mx-auto sm:max-w-none"
                 >
                   <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden bg-gray-200">
                     {product.image_data ? (
@@ -385,14 +385,14 @@ export default function Home({ to = '' }) {
               <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12">FEATURED PRODUCTS</h2>
             </Reavel>
 
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-4 sm:px-0">
               {products.slice(0, 4).map((product, index) => (
                 <motion.div
                   key={product.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow max-w-md mx-auto sm:max-w-none"
                 >
                   <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden bg-gray-200">
                     {product.image_data ? (
