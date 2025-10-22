@@ -344,33 +344,33 @@ export default function HappyCustomers() {
         )}
       </div>
 
-      {/* Mobile Navigation */}
+      {/* Mobile Navigation - FIXED */}
       {hasReviews && (
-        <div className="flex justify-center items-center gap-6 mt-6 md:hidden">
+        <div className="flex justify-center items-center gap-3 sm:gap-6 mt-6 md:hidden">
           <button
             onClick={prevCustomer}
             disabled={currentIndex === 0}
-            className={`p-2 rounded-full ${currentIndex === 0
+            className={`p-2 rounded-full flex-shrink-0 ${currentIndex === 0
                 ? 'text-gray-300 cursor-not-allowed'
                 : 'text-blue-500 hover:text-blue-700 hover:bg-blue-50'
               } transition-colors`}
           >
-            <FaArrowLeft size={20} />
+            <FaArrowLeft size={18} />
           </button>
 
-          <span className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
+          <span className="text-xs sm:text-sm text-gray-600 bg-gray-100 px-2 sm:px-3 py-1 rounded-full whitespace-nowrap flex-shrink-0">
             {currentIndex + 1} of {reviewsCount}
           </span>
 
           <button
             onClick={nextCustomer}
             disabled={currentIndex === reviewsCount - 1}
-            className={`p-2 rounded-full ${currentIndex === reviewsCount - 1
+            className={`p-2 rounded-full flex-shrink-0 ${currentIndex === reviewsCount - 1
                 ? 'text-gray-300 cursor-not-allowed'
                 : 'text-blue-500 hover:text-blue-700 hover:bg-blue-50'
               } transition-colors`}
           >
-            <FaArrowRight size={20} />
+            <FaArrowRight size={18} />
           </button>
         </div>
       )}
