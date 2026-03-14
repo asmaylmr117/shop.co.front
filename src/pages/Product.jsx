@@ -56,12 +56,12 @@ export default function Product() {
 
   const handleSubmit = () => {
     const color = Color === '1' ? 'Yellow' :
-                  Color === '2' ? 'Red' :
-                  Color === '3' ? 'Green' :
-                  Color === '4' ? 'Blue' :
-                  Color === '5' ? 'Light Yellow' :
-                  Color === '6' ? 'Light Red' :
-                  Color === '7' ? 'Light Green' :
+      Color === '2' ? 'Red' :
+        Color === '3' ? 'Green' :
+          Color === '4' ? 'Blue' :
+            Color === '5' ? 'Light Yellow' :
+              Color === '6' ? 'Light Red' :
+                Color === '7' ? 'Light Green' :
                   Color === '8' ? 'Light Blue' : 'Any';
     const size = Size;
     AddToCart({ ...MyProduct, color, size, Quantity }, setCart, setCost);
@@ -108,35 +108,35 @@ export default function Product() {
 
   return (
     <>
-      <div className='flex my-5 mainMargin items-center gap-4'>
-        <Link to='/' className='text-gray-400'>Home</Link>
-        <IoIosArrowForward color='gray' />
-        <Link to='/Shop' className='text-gray-400'>Shop</Link>
-        <IoIosArrowForward color='gray' />
-        <span className='text-gray-600'>{MyProduct.name}</span>
+      <div className='flex my-5 mainMargin items-center gap-4 overflow-hidden'>
+        <Link to='/' className='text-gray-400 whitespace-nowrap'>Home</Link>
+        <IoIosArrowForward color='gray' className='flex-shrink-0' />
+        <Link to='/Shop' className='text-gray-400 whitespace-nowrap'>Shop</Link>
+        <IoIosArrowForward color='gray' className='flex-shrink-0' />
+        <span className='text-gray-600 whitespace-nowrap overflow-hidden text-ellipsis'>{MyProduct.name}</span>
       </div>
       <div className='flex flex-wrap justify-center gap-x-10 mainMargin h-fit'>
-        <div className='bg-gray-100 flex-grow rounded-xl flex justify-center w-[80%]'>
-      {MyProduct.image_data ? (
-  <img
-    className='w-[80%] object-contain'
-    src={`data:image/jpeg;base64,${MyProduct.image_data}`}
-    alt={MyProduct.name || 'Product'}
-  />
-) : MyProduct.image_url || MyProduct.src ? (
-  <Img
-    className='w-[80%]'
-    src={MyProduct.image_url || MyProduct.src}
-    alt={MyProduct.name || 'Product'}
-    img={MyProduct.src?.split('/').pop().split('.')[0] || 'DefaultImage'}
-  />
-) : (
-  <img
-    className='w-[80%]'
-    src='/default-image.jpg'
-    alt='Default Product Image'
-  />
-)}
+        <div className='bg-gray-100 flex-grow rounded-xl flex justify-center items-center w-[80%] max-h-[450px] overflow-hidden py-4'>
+          {MyProduct.image_data ? (
+            <img
+              className='w-[60%] max-h-[400px] object-contain'
+              src={`data:image/jpeg;base64,${MyProduct.image_data}`}
+              alt={MyProduct.name || 'Product'}
+            />
+          ) : MyProduct.image_url || MyProduct.src ? (
+            <Img
+              className='w-[60%] max-h-[400px] object-contain'
+              src={MyProduct.image_url || MyProduct.src}
+              alt={MyProduct.name || 'Product'}
+              img={MyProduct.src?.split('/').pop().split('.')[0] || 'DefaultImage'}
+            />
+          ) : (
+            <img
+              className='w-[60%] max-h-[400px] object-contain'
+              src='/default-image.jpg'
+              alt='Default Product Image'
+            />
+          )}
 
         </div>
         <div className='relative w-[100%-40px]'>
