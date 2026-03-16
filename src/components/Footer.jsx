@@ -4,10 +4,15 @@ import { FaFacebook } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
 import { FaGithub } from "react-icons/fa";
 import PaymentsLogos from "./PaymentsLogos";
-import { useState } from "react"; 
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
-  const [isSubscribed, setIsSubscribed] = useState(false); // إضافة حالة لتتبع الاشتراك
+  const [isSubscribed, setIsSubscribed] = useState(false);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   
   const handleSubmit = (e) => {
@@ -72,30 +77,30 @@ export default function Footer() {
             <div id="2" className="w-full flex flex-col gap-2 items-center lg:items-start text-xs sm:text-sm">
               <h1 className="font-semibold text-base sm:text-lg">Company</h1>
               <ul className="flex flex-col gap-1 sm:gap-2">
-                <li><a href="/About">About</a></li>
-                <li ><a href="/shop">Features of SHOP.CO</a></li>
-                <li ><a href="/shop">Works</a></li>
-                <li ><a href="/About">Career</a></li>
+                <li><Link to="/About" onClick={scrollToTop}>About</Link></li>
+                <li><Link to="/shop" onClick={scrollToTop}>Features of SHOP.CO</Link></li>
+                <li><Link to="/shop" onClick={scrollToTop}>Works</Link></li>
+                <li><Link to="/About" onClick={scrollToTop}>Career</Link></li>
               </ul>
             </div>
 
             <div id="3" className="w-full flex flex-col gap-2 items-center lg:items-start text-xs sm:text-sm">
               <h1 className="font-semibold text-base sm:text-lg">Help</h1>
               <ul className="flex flex-col gap-1 sm:gap-2">
-                <li ><a href="/Contact">Customer Support</a></li>
-                <li ><a href="/orders">Delivery Details</a></li>
-                <li >Terms & Conditions</li>
-                <li >Privacy Policy</li>
+                <li><Link to="/Contact" onClick={scrollToTop}>Customer Support</Link></li>
+                <li><Link to="/orders" onClick={scrollToTop}>Delivery Details</Link></li>
+                <li>Terms & Conditions</li>
+                <li>Privacy Policy</li>
               </ul>
             </div>
 
             <div id="4" className="w-full flex flex-col gap-2 items-center lg:items-start text-xs sm:text-sm">
               <h1 className="font-semibold text-base sm:text-lg">FAQ</h1>
               <ul className="flex flex-col gap-1 sm:gap-2">
-                <li ><a href="/profile">Account</a></li>
-                <li ><a href="/orders">Manage Deliveries</a></li>
-                <li ><a href="/orders">Orders</a></li>
-                <li >Payments</li>
+                <li><Link to="/profile" onClick={scrollToTop}>Account</Link></li>
+                <li><Link to="/orders" onClick={scrollToTop}>Manage Deliveries</Link></li>
+                <li><Link to="/orders" onClick={scrollToTop}>Orders</Link></li>
+                <li>Payments</li>
               </ul>
             </div>
 
