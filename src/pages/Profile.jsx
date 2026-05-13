@@ -13,7 +13,8 @@ import {
   FiTrendingUp,
   FiEdit,
   FiSave,
-  FiX
+  FiX,
+  FiLock
 } from 'react-icons/fi';
 
 export default function Profile() {
@@ -25,6 +26,14 @@ export default function Profile() {
   const [editingEmail, setEditingEmail] = useState(false);
   const [newEmail, setNewEmail] = useState('');
   const [activeTab, setActiveTab] = useState('profile');
+  const [changingPassword, setChangingPassword] = useState(false);
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+  const [passwordError, setPasswordError] = useState('');
+  const [passwordSuccess, setPasswordSuccess] = useState('');
 
   useEffect(() => {
     fetchUserData();
@@ -189,6 +198,43 @@ export default function Profile() {
     }
   };
 
+  const handlePasswordChange = async (e) => {
+    e.preventDefault();
+    setPasswordError('');
+    setPasswordSuccess('');
+
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      return setPasswordError('New passwords do not match');
+    }
+
+    if (passwordForm.newPassword.length < 6) {
+      return setPasswordError('New password must be at least 6 characters');
+    }
+
+    try {
+      const response = await fetch('https://shopbackco.vercel.app/api/auth/change-password', {
+        method: 'PUT',
+        headers: getAuthHeaders('application/json'),
+        body: JSON.stringify({
+          currentPassword: passwordForm.currentPassword,
+          newPassword: passwordForm.newPassword
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setPasswordSuccess('Password changed successfully');
+        setChangingPassword(false);
+        setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      } else {
+        setPasswordError(data.message || 'Failed to change password');
+      }
+    } catch (err) {
+      setPasswordError('An error occurred. Please try again later.');
+    }
+  };
+
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -274,6 +320,16 @@ export default function Profile() {
             className="bg-white shadow rounded-lg p-6"
           >
             <h2 className="text-lg font-medium text-gray-900 mb-4">Profile Information</h2>
+            
+            {passwordSuccess && (
+              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded mb-4 flex items-start">
+                <span className="flex-1">{passwordSuccess}</span>
+                <button onClick={() => setPasswordSuccess('')} className="ml-2 mt-1">
+                  <FiX />
+                </button>
+              </div>
+            )}
+            
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">Username</label>
@@ -326,6 +382,75 @@ export default function Profile() {
                 <p className="mt-1 text-sm text-gray-900">
                   {userProfile?.created_at ? formatDate(userProfile.created_at) : 'N/A'}
                 </p>
+              </div>
+
+              {/* Password Section */}
+              <div className="pt-4 border-t border-gray-200 mt-6">
+                <h3 className="text-md font-medium text-gray-900 mb-4 flex items-center">
+                  <FiLock className="mr-2" /> Security
+                </h3>
+                
+                {!changingPassword ? (
+                  <button
+                    onClick={() => setChangingPassword(true)}
+                    className="bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 text-sm font-medium transition-colors"
+                  >
+                    Change Password
+                  </button>
+                ) : (
+                  <form onSubmit={handlePasswordChange} className="space-y-4 max-w-md">
+                    {passwordError && <p className="text-sm text-red-600 bg-red-50 p-2 rounded">{passwordError}</p>}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Current Password</label>
+                      <input
+                        type="password"
+                        required
+                        value={passwordForm.currentPassword}
+                        onChange={(e) => setPasswordForm({...passwordForm, currentPassword: e.target.value})}
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">New Password</label>
+                      <input
+                        type="password"
+                        required
+                        value={passwordForm.newPassword}
+                        onChange={(e) => setPasswordForm({...passwordForm, newPassword: e.target.value})}
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Confirm New Password</label>
+                      <input
+                        type="password"
+                        required
+                        value={passwordForm.confirmPassword}
+                        onChange={(e) => setPasswordForm({...passwordForm, confirmPassword: e.target.value})}
+                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      />
+                    </div>
+                    <div className="flex space-x-3 pt-2">
+                      <button
+                        type="submit"
+                        className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 text-sm font-medium transition-colors"
+                      >
+                        Save Password
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setChangingPassword(false);
+                          setPasswordError('');
+                          setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+                        }}
+                        className="bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-50 text-sm font-medium transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                )}
               </div>
             </div>
           </motion.div>
