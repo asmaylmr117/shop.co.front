@@ -44,7 +44,13 @@ export default function AdminContacts() {
 
       if (response.ok) {
         const data = await response.json();
-        setContacts(data.contacts || data || []);
+        let fetchedContacts = [];
+        if (data && Array.isArray(data.contacts)) {
+          fetchedContacts = data.contacts;
+        } else if (Array.isArray(data)) {
+          fetchedContacts = data;
+        }
+        setContacts(fetchedContacts);
       } else {
         throw new Error('Failed to fetch contacts');
       }
@@ -94,11 +100,12 @@ export default function AdminContacts() {
     setShowDeleteModal(true);
   };
 
-  const filteredContacts = contacts.filter(contact => {
+  const safeContacts = Array.isArray(contacts) ? contacts : [];
+  const filteredContacts = safeContacts.filter(contact => {
     const matchesSearch =
-      contact.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contact.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      contact.subject?.toLowerCase().includes(searchTerm.toLowerCase());
+      (contact.name || '').toLowerCase().includes((searchTerm || '').toLowerCase()) ||
+      (contact.email || '').toLowerCase().includes((searchTerm || '').toLowerCase()) ||
+      (contact.subject || '').toLowerCase().includes((searchTerm || '').toLowerCase());
     return matchesSearch;
   });
 
