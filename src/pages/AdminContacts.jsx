@@ -44,12 +44,26 @@ export default function AdminContacts() {
 
       if (response.ok) {
         const data = await response.json();
+        console.log("Contact API response:", data);
+        
         let fetchedContacts = [];
-        if (data && Array.isArray(data.contacts)) {
-          fetchedContacts = data.contacts;
-        } else if (Array.isArray(data)) {
+        if (Array.isArray(data)) {
           fetchedContacts = data;
+        } else if (data && typeof data === 'object') {
+          // Look for an array in the properties (e.g. data.contacts, data.data, data.messages)
+          if (Array.isArray(data.contacts)) {
+            fetchedContacts = data.contacts;
+          } else if (Array.isArray(data.data)) {
+            fetchedContacts = data.data;
+          } else {
+            // Find the first array property in the object
+            const arrayProperty = Object.values(data).find(val => Array.isArray(val));
+            if (arrayProperty) {
+              fetchedContacts = arrayProperty;
+            }
+          }
         }
+        
         setContacts(fetchedContacts);
       } else {
         throw new Error('Failed to fetch contacts');
