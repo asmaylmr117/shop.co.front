@@ -395,7 +395,7 @@ export default function Profile() {
              
 
               {/* Quick Actions */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <Link
                   to="/AdminProducts"
                   className="bg-indigo-600 text-white p-4 rounded-lg hover:bg-indigo-700 text-center transition-colors"
@@ -426,6 +426,17 @@ export default function Profile() {
                   <div className="font-medium">Manage Reviews</div>
                   <div className="text-sm opacity-90">
                     {adminStats?.reviews?.total || 0} reviews
+                  </div>
+                </Link>
+
+                <Link
+                  to="/AdminContacts"
+                  className="bg-red-600 text-white p-4 rounded-lg hover:bg-red-700 text-center transition-colors"
+                >
+                  <FiMail className="h-8 w-8 mx-auto mb-2" />
+                  <div className="font-medium">Messages</div>
+                  <div className="text-sm opacity-90">
+                    View Messages
                   </div>
                 </Link>
               </div>
