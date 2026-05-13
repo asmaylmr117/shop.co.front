@@ -50,13 +50,16 @@ export default function AdminContacts() {
         if (Array.isArray(data)) {
           fetchedContacts = data;
         } else if (data && typeof data === 'object') {
-          // Look for an array in the properties (e.g. data.contacts, data.data, data.messages)
           if (Array.isArray(data.contacts)) {
             fetchedContacts = data.contacts;
+          } else if (data.data && Array.isArray(data.data.messages)) {
+            // This is the actual structure returned by the backend: data.data.messages
+            fetchedContacts = data.data.messages;
           } else if (Array.isArray(data.data)) {
             fetchedContacts = data.data;
+          } else if (Array.isArray(data.messages)) {
+            fetchedContacts = data.messages;
           } else {
-            // Find the first array property in the object
             const arrayProperty = Object.values(data).find(val => Array.isArray(val));
             if (arrayProperty) {
               fetchedContacts = arrayProperty;
