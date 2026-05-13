@@ -1,73 +1,220 @@
 import { useEffect, useState } from 'react';
 import { IoIosArrowForward } from 'react-icons/io';
-import { Link, useNavigate, useLocation } from 'react-router-dom'; // Add useNavigate, useLocation
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { FaStar, FaSpinner } from 'react-icons/fa';
 
+// ── Star Rating ───────────────────────────────────────────────────────────────
+function StarRating({ rating = 0 }) {
+  const num = parseFloat(rating) || 0;
+  return (
+    <div style={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+      {[1, 2, 3, 4, 5].map(i => (
+        <FaStar key={i} size={11} color={i <= Math.round(num) ? '#FBBF24' : '#E5E7EB'} />
+      ))}
+      <span style={{ fontSize: 11, color: '#9CA3AF', marginLeft: 4 }}>{num}</span>
+    </div>
+  );
+}
+
+// ── Product Card ──────────────────────────────────────────────────────────────
+function ProductCard({ product, index }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: Math.min(index * 0.05, 0.5), duration: 0.35, ease: 'easeOut' }}
+      className="shop-card"
+    >
+      {/* Image */}
+      <div className="shop-card-img-wrap">
+        {product.discount > 0 && (
+          <span className="shop-badge">-{product.discount}%</span>
+        )}
+        {product.image_data ? (
+          <img
+            src={`data:image/jpeg;base64,${product.image_data}`}
+            alt={product.name}
+            className="shop-card-img"
+          />
+        ) : (
+          <div className="shop-card-no-img">
+            <span>No Image</span>
+          </div>
+        )}
+      </div>
+
+      {/* Body */}
+      <div className="shop-card-body">
+        <h3 className="shop-card-name">{product.name || 'Unnamed Product'}</h3>
+        <p className="shop-card-desc">{product.description || 'No description available'}</p>
+
+        <div className="shop-card-footer">
+          <div className="shop-card-price-row">
+            <span className="shop-card-price">${product.price || '—'}</span>
+            <StarRating rating={product.stars} />
+          </div>
+          <Link
+            to={`/Shop/${encodeURIComponent(product.name || 'product')}`}
+            className="shop-card-btn"
+          >
+            View Product
+          </Link>
+        </div>
+      </div>
+
+      <style>{`
+        .shop-card {
+          background: #fff;
+          border-radius: 18px;
+          overflow: hidden;
+          border: 1px solid #F0F0F0;
+          box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+          display: flex;
+          flex-direction: column;
+          transition: box-shadow 0.25s, transform 0.25s;
+        }
+        .shop-card:hover {
+          box-shadow: 0 10px 32px rgba(0,0,0,0.12);
+          transform: translateY(-4px);
+        }
+        .shop-card-img-wrap {
+          position: relative;
+          background: #F4F4F5;
+          aspect-ratio: 1 / 1;
+          overflow: hidden;
+        }
+        .shop-card-img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.45s ease;
+        }
+        .shop-card:hover .shop-card-img { transform: scale(1.07); }
+        .shop-card-no-img {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #C4C4C4;
+          font-size: 12px;
+        }
+        .shop-badge {
+          position: absolute;
+          top: 10px;
+          left: 10px;
+          background: #111;
+          color: #fff;
+          font-size: 10px;
+          font-weight: 800;
+          padding: 3px 9px;
+          border-radius: 20px;
+          z-index: 1;
+          letter-spacing: 0.4px;
+        }
+        .shop-card-body {
+          padding: 14px 14px 16px;
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+          gap: 8px;
+        }
+        .shop-card-name {
+          font-size: 14px;
+          font-weight: 700;
+          color: #111;
+          margin: 0;
+          line-height: 1.3;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+        .shop-card-desc {
+          font-size: 12px;
+          color: #9CA3AF;
+          margin: 0;
+          line-height: 1.5;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+        .shop-card-footer {
+          margin-top: auto;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        .shop-card-price-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        .shop-card-price {
+          font-size: 16px;
+          font-weight: 900;
+          color: #111;
+          letter-spacing: -0.3px;
+        }
+        .shop-card-btn {
+          display: block;
+          width: 100%;
+          text-align: center;
+          background: #111;
+          color: #fff;
+          font-size: 12px;
+          font-weight: 700;
+          padding: 10px 0;
+          border-radius: 10px;
+          text-decoration: none;
+          letter-spacing: 0.4px;
+          transition: background 0.2s;
+        }
+        .shop-card-btn:hover { background: #374151; }
+      `}</style>
+    </motion.div>
+  );
+}
+
+// ── Main Shop Page ────────────────────────────────────────────────────────────
 export default function Shop() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // Hook for navigation
-  const location = useLocation(); // Hook to access URL parameters
+  const [search, setSearch] = useState('');
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
 
-    // Fetch products from API
     const fetchProducts = async () => {
       try {
         setLoading(true);
         const response = await fetch('https://shopbackco.vercel.app/api/products');
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
         const data = await response.json();
-
-        let productsArray = [];
-        if (Array.isArray(data)) {
-          productsArray = data;
-        } else if (data && Array.isArray(data.products)) {
-          productsArray = data.products;
-        } else if (data && Array.isArray(data.data)) {
-          productsArray = data.data;
-        } else if (data && typeof data === 'object') {
-          const possibleArrays = Object.values(data).filter(val => Array.isArray(val));
-          if (possibleArrays.length > 0) {
-            productsArray = possibleArrays[0];
-          }
+        let arr = [];
+        if (Array.isArray(data)) arr = data;
+        else if (data?.products) arr = data.products;
+        else if (data?.data) arr = data.data;
+        else {
+          const vals = Object.values(data).filter(v => Array.isArray(v));
+          if (vals.length) arr = vals[0];
         }
 
-        console.log('API Response:', data);
-        console.log('Processed Products:', productsArray);
-
-        setProducts(productsArray);
+        setProducts(arr);
         setError(null);
 
-        // Check for search query in URL
-        const queryParams = new URLSearchParams(location.search);
-        const searchQuery = queryParams.get('search')?.trim().toLowerCase();
-
-        if (searchQuery) {
-          const matchedProduct = productsArray.find(
-            (product) => product.name?.toLowerCase() === searchQuery
-          );
-          if (matchedProduct) {
-            // Redirect to the product page
-            navigate(`/Shop/${encodeURIComponent(matchedProduct.name)}`);
-          } else {
-            // Optionally, you can set an error or show a message
-            console.log('No product found for search query:', searchQuery);
-          }
+        const query = new URLSearchParams(location.search).get('search')?.trim().toLowerCase();
+        if (query) {
+          const match = arr.find(p => p.name?.toLowerCase() === query);
+          if (match) navigate(`/Shop/${encodeURIComponent(match.name)}`);
         }
       } catch (err) {
-        console.error('Error fetching products:', err);
-        console.error('Error details:', {
-          message: err.message,
-          stack: err.stack,
-          url: 'https://shopbackco.vercel.app/api/products',
-        });
         setError(`Failed to load products: ${err.message}`);
         setProducts([]);
       } finally {
@@ -76,100 +223,212 @@ export default function Shop() {
     };
 
     fetchProducts();
-  }, [navigate, location.search]); // Add dependencies
+  }, [navigate, location.search]);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
-      </div>
-    );
-  }
+  const filtered = search.trim()
+    ? products.filter(p =>
+        p.name?.toLowerCase().includes(search.toLowerCase()) ||
+        p.description?.toLowerCase().includes(search.toLowerCase())
+      )
+    : products;
 
-  if (error) {
-    return (
-      <div className="flex flex-col justify-center items-center min-h-screen">
-        <div className="text-red-500 text-xl mb-4">Error loading products</div>
-        <div className="text-gray-600 mb-4">{error}</div>
-        <button
-          onClick={() => window.location.reload()}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Try Again
-        </button>
-      </div>
-    );
-  }
+  // ── Loading ──
+  if (loading) return (
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+      <FaSpinner size={32} color="#111" style={{ animation: 'shopSpin 0.8s linear infinite' }} />
+      <style>{`@keyframes shopSpin { to { transform: rotate(360deg); } }`}</style>
+    </div>
+  );
+
+  // ── Error ──
+  if (error) return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: 12, padding: 24 }}>
+      <p style={{ fontSize: 16, color: '#EF4444', fontWeight: 600 }}>Something went wrong</p>
+      <p style={{ fontSize: 13, color: '#9CA3AF' }}>{error}</p>
+      <button
+        onClick={() => window.location.reload()}
+        style={{ background: '#111', color: '#fff', border: 'none', borderRadius: 10, padding: '10px 24px', fontWeight: 700, cursor: 'pointer', fontSize: 13 }}
+      >
+        Try Again
+      </button>
+    </div>
+  );
 
   return (
-    <div className="mainMargin">
-      <div className="flex items-center gap-4 mb-6">
-        <Link to="/" className="text-gray-400">Home</Link>
-        <IoIosArrowForward color="gray" />
-        <p>Shop</p>
+    <div className="shop-page">
+
+      {/* ── Top bar ── */}
+      <div className="shop-topbar">
+        <div className="shop-breadcrumb">
+          <Link to="/" className="bc-home">Home</Link>
+          <IoIosArrowForward color="#9CA3AF" size={14} />
+          <span className="bc-current">Shop</span>
+        </div>
+
+        <div className="shop-meta">
+          <span className="shop-count">{filtered.length} products</span>
+          <div className="shop-search-wrap">
+            <span className="search-icon">🔍</span>
+            <input
+              className="shop-search"
+              placeholder="Search products…"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+            />
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {products.map((product, index) => (
-          <motion.div
-            key={product.id || index}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow w-full"
-          >
-            <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden bg-gray-200">
-              {product.image_data ? (
-                <img
-                  src={`data:image/jpeg;base64,${product.image_data}`}
-                  alt={product.name}
-                  className="w-full h-48 object-cover hover:scale-105 transition-transform"
-                />
-              ) : (
-                <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
-                  <span className="text-gray-400">No Image</span>
-                </div>
-              )}
-            </div>
+      {/* ── Grid ── */}
+      {filtered.length === 0 ? (
+        <div className="shop-empty">
+          <span>🛍️</span>
+          <p>No products found{search ? ` for "${search}"` : '.'}</p>
+          {search && (
+            <button className="clear-search" onClick={() => setSearch('')}>Clear search</button>
+          )}
+        </div>
+      ) : (
+        <div className="shop-grid">
+          {filtered.map((product, index) => (
+            <ProductCard key={product.id || index} product={product} index={index} />
+          ))}
+        </div>
+      )}
 
-            <div className="p-4">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                {product.name || 'Unnamed Product'}
-              </h3>
-              <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-                {product.description || 'No description available'}
-              </p>
+      <style>{`
+        .shop-page {
+          max-width: 1280px;
+          margin: 0 auto;
+          padding: 24px 16px 60px;
+        }
+        @media (min-width: 640px) {
+          .shop-page { padding: 32px 24px 72px; }
+        }
+        @media (min-width: 1024px) {
+          .shop-page { padding: 40px 48px 80px; }
+        }
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <span className="text-lg font-bold text-gray-900">
-                    ${product.price || 'N/A'}
-                  </span>
-                  {product.discount > 0 && (
-                    <span className="text-sm text-green-600 bg-green-100 px-2 py-1 rounded">
-                      {product.discount}% OFF
-                    </span>
-                  )}
-                </div>
+        /* Top bar */
+        .shop-topbar {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          margin-bottom: 28px;
+        }
+        @media (min-width: 640px) {
+          .shop-topbar {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+          }
+        }
 
-                <div className="flex items-center">
-                  <span className="text-yellow-400">★</span>
-                  <span className="text-sm text-gray-600 ml-1">
-                    {product.stars || 'N/A'}
-                  </span>
-                </div>
-              </div>
+        .shop-breadcrumb {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        .bc-home {
+          font-size: 13px;
+          color: #9CA3AF;
+          text-decoration: none;
+          transition: color 0.2s;
+        }
+        .bc-home:hover { color: #111; }
+        .bc-current {
+          font-size: 13px;
+          font-weight: 700;
+          color: #111;
+        }
 
-              <Link
-                to={`/Shop/${encodeURIComponent(product.name || 'product')}`}
-                className="mt-4 block w-full bg-black text-white text-center py-2 rounded-lg hover:bg-gray-800 transition-colors"
-              >
-                View Product
-              </Link>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+        .shop-meta {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+        .shop-count {
+          font-size: 12px;
+          color: #9CA3AF;
+          font-weight: 600;
+          white-space: nowrap;
+        }
+        .shop-search-wrap {
+          position: relative;
+          display: flex;
+          align-items: center;
+        }
+        .search-icon {
+          position: absolute;
+          left: 10px;
+          font-size: 13px;
+          pointer-events: none;
+        }
+        .shop-search {
+          border: 1.5px solid #E5E7EB;
+          border-radius: 40px;
+          padding: 8px 16px 8px 34px;
+          font-size: 13px;
+          outline: none;
+          width: 200px;
+          transition: border-color 0.2s, width 0.3s;
+          background: #fff;
+          color: #111;
+        }
+        .shop-search:focus {
+          border-color: #111;
+          width: 240px;
+        }
+        @media (max-width: 400px) {
+          .shop-search { width: 160px; }
+          .shop-search:focus { width: 180px; }
+        }
+
+        /* Grid */
+        .shop-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px;
+        }
+        @media (min-width: 640px) {
+          .shop-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+          }
+        }
+        @media (min-width: 900px) {
+          .shop-grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+          }
+        }
+        @media (min-width: 1200px) {
+          .shop-grid {
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+          }
+        }
+
+        /* Empty */
+        .shop-empty {
+          text-align: center;
+          padding: 64px 24px;
+          color: #9CA3AF;
+        }
+        .shop-empty span { font-size: 48px; display: block; margin-bottom: 12px; }
+        .shop-empty p { font-size: 15px; margin: 0 0 16px; }
+        .clear-search {
+          background: #111;
+          color: #fff;
+          border: none;
+          padding: 9px 20px;
+          border-radius: 20px;
+          font-size: 13px;
+          font-weight: 600;
+          cursor: pointer;
+        }
+      `}</style>
     </div>
   );
 }
