@@ -109,14 +109,14 @@ export default function Shop() {
         <p>Shop</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 justify-items-center">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {products.map((product, index) => (
           <motion.div
             key={product.id || index}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow max-w-md mx-auto sm:max-w-none"
+            className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow w-full"
           >
             <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden bg-gray-200">
               {product.image_data ? (
