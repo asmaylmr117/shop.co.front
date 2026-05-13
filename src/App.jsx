@@ -8,6 +8,7 @@ import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
 import Product from "./pages/Product";
 import Profile from "./pages/Profile";
+import AdminContacts from "./pages/AdminContacts";
 import AdminProducts from "./pages/AdminProducts";
 import AdminOrders from "./pages/AdminOrders";
 import AdminReviews from "./pages/AdminReviews";
@@ -31,6 +32,7 @@ const router = createBrowserRouter([
       { path: "AdminProducts", element: <AdminProducts /> },
       { path: "AdminOrders", element: <AdminOrders /> },
       { path: "AdminReviews", element: <AdminReviews /> },
+      { path: "AdminContacts", element: <AdminContacts /> },
       { path: "Orders", element: <Orders /> },
       { path: "About", element: <About /> }, 
       { path: "Contact", element: <Contact /> },
