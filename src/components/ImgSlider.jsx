@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { motion, useAnimation, useInView } from "framer-motion";
+import { motion } from "framer-motion";
 import RateCost from "./RateCost";
 import { useNavigate } from "react-router-dom";
 import Img from "./Img";
@@ -10,10 +10,7 @@ export default function ImgSlider({ type, del = 'no', id }) {
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
   const ref = useRef()
-
   const mainDiv = useRef()
-  const inView = useInView(mainDiv, { once: true })
-  const MainControls = useAnimation()
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -49,12 +46,6 @@ export default function ImgSlider({ type, del = 'no', id }) {
     return isSameType && isNotCurrent;
   }).slice(0, 8); // Display up to 8 products
 
-  useEffect(() => {
-    if (inView) {
-      MainControls.start('visible')
-    }
-  }, [inView, MainControls])
-  
   useEffect(() => {
     const timer = setTimeout(() => {
       if (ref.current) {
@@ -104,7 +95,8 @@ export default function ImgSlider({ type, del = 'no', id }) {
                     }}
                     transition={{ delay: index * 0.1, type: 'just' }}
                     initial="hidden"
-                    animate={MainControls}
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.1 }}
                     className="flex flex-col w-[160px] h-[260px] sm:w-[170px] sm:h-[270px] md:w-[200px] md:h-[300px] lg:w-[250px] lg:h-[350px]"
                   >
                     <motion.div
